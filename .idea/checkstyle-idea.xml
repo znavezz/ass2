@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CheckStyle-IDEA" serialisationVersion="2">
+    <checkstyleVersion>8.44</checkstyleVersion>
+    <scanScope>JavaOnly</scanScope>
+    <option name="thirdPartyClasspath" />
+    <option name="activeLocationIds">
+      <option value="dd35decd-4693-4561-8c3d-bc100b6e8e05" />
+    </option>
+    <option name="locations">
+      <list>
+        <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="dd35decd-4693-4561-8c3d-bc100b6e8e05" type="PROJECT_RELATIVE" scope="All" description="biuoop.xml">$PROJECT_DIR$/../../../../Applications/JAVA/biuoop.xml</ConfigurationLocation>
+      </list>
+    </option>
+  </component>
+</project>
