@@ -42,7 +42,7 @@ public class MultipleBouncingBallsAnimation {
         ArrayList<Ball> balls = new ArrayList<>();
         for (String string : args) {
             int ballSize = Integer.parseInt(string);
-            Ball newBall = new Ball(ballSize);
+            Ball newBall = new Ball(ballSize, 0, 0, WIDTH, HEIGHT);
             balls.add(newBall);
         }
         while (true) {

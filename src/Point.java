@@ -27,6 +27,7 @@ public class Point {
         this.x = 0;
         this.y = 0;
     }
+
     /**
      * Constructs a new Point object with the specified x and y coordinates.
      *
@@ -37,6 +38,18 @@ public class Point {
         this.x = x;
         this.y = y;
     }
+
+
+    /**
+     * Constructs a new Point object as the given point.
+     *
+     * @param point the point.
+     */
+    public Point(Point point) {
+        this.x = point.getX();
+        this.y = point.getY();
+    }
+
     /**
      * Returns a string representation of this point.
      *
@@ -56,6 +69,7 @@ public class Point {
         return Math.sqrt(((this.getX() - other.getX()) * (this.getX() - other.getX()))
                 + ((this.getY() - other.getY()) * (this.getY() - other.getY())));
     }
+
     /**
      * Returns the x-coordinate of this point.
      *
@@ -64,6 +78,7 @@ public class Point {
     public double getX() {
         return this.x;
     }
+
     /**
      * Returns the y-coordinate of this point.
      *
@@ -72,6 +87,7 @@ public class Point {
     public double getY() {
         return this.y;
     }
+
     //setters
     public void setX(double x) {
         this.x = x;
@@ -92,6 +108,7 @@ public class Point {
         return (Geometry.doubleEquals(this.getX(), other.getX())
                 && (Geometry.doubleEquals(this.getY(), other.getY())));
     }
+
     /**
      * Checks if this point is on the given line.
      *

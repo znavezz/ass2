@@ -18,7 +18,7 @@ public class Velocity {
         return new Velocity(dx, dy);
     }
 
-    //Accesors
+    //Accessors
     public double getDx() {
         return this.dx;
     }
@@ -45,4 +45,9 @@ public class Velocity {
         double newY = p.getY() + this.dy;
         return new Point(newX, newY);
     }
+
+//    public Point potentialMove(Ball ball) {
+//        Point potential = new Point(ball.getCenter());
+//
+//    }
 }

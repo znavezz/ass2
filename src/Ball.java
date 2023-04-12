@@ -21,16 +21,12 @@ public class Ball {
 
     //constructors
     public Ball() {
-        do {
-            this.downBorder = 500;
-            this.rightBorder = 500;
             this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 5;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
-        } while (this.isOutOfFrame());
-
+            this.fixBall();
     }
 
     public Ball(Point center, int r, java.awt.Color color) {
@@ -38,6 +34,7 @@ public class Ball {
         this.size = r;
         this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.fixBall();
     }
 
     public Ball(double x, double y, int r, java.awt.Color color) {
@@ -45,50 +42,44 @@ public class Ball {
         this.size = r;
         this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.fixBall();
     }
 
     public Ball(Color color) {
-        do {
+
             this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             this.color = color;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
-        } while (this.isOutOfFrame());
-
+            this.fixBall();
     }
 
     public Ball(Point center) {
-        do {
             this.center = center;
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
-        } while (this.isOutOfFrame());
-
+            this.fixBall();
     }
 
     public Ball(double x, double y) {
-        do {
             this.center.setX(x);
             this.center.setY(y);
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
-        } while (this.isOutOfFrame());
-
+            this.fixBall();
     }
 
     public Ball(int size) {
-        do {
             this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
             this.size = size;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
-        } while (this.isOutOfFrame());
-
+            this.fixBall();
     }
 
     public Ball(Point center, int r) {
@@ -97,6 +88,7 @@ public class Ball {
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
         this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.fixBall();
     }
 
     public Ball(Point center, int r, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
@@ -109,6 +101,7 @@ public class Ball {
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
         this.rightBorder = rightBorder;
+        this.fixBall();
     }
 
     public Ball(int r, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
@@ -121,6 +114,7 @@ public class Ball {
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
         this.rightBorder = rightBorder;
+        this.fixBall();
     }
 
     public Ball(Point center, int size, Color color, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
@@ -133,6 +127,7 @@ public class Ball {
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
         this.rightBorder = rightBorder;
+        this.fixBall();
     }
 
 
@@ -151,6 +146,10 @@ public class Ball {
 
     public java.awt.Color getColor() {
         return this.color;
+    }
+
+    public Point getCenter() {
+        return this.center;
     }
 
     // setters
