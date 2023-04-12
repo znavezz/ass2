@@ -4,17 +4,20 @@ public class Velocity {
     //Fields
     private double dx;
     private double dy;
+    private double angle;
+    private double speed;
 
     // constructor
     public Velocity(double dx, double dy) {
         this.dx = dx;
         this.dy = dy;
+        double speed = Math.sqrt((dx * dx) + (dy * dy));
+        double angle = Math.atan2(-this.dy, this.dx);
     }
 
     public static Velocity fromAngleAndSpeed(double angle, double speed) {
-        double radians = Math.toRadians(angle);
-        double dx = speed * Math.sin(radians);
-        double dy = -speed * Math.cos(radians);
+        double dx = speed * Math.sin(angle);
+        double dy = -speed * Math.cos(angle);
         return new Velocity(dx, dy);
     }
 

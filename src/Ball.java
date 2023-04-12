@@ -25,7 +25,7 @@ public class Ball {
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 5;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall();
     }
 
@@ -33,7 +33,7 @@ public class Ball {
         this.center = center;
         this.size = r;
         this.color = color;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.fixBall();
     }
 
@@ -41,7 +41,7 @@ public class Ball {
         this.center = new Point(x, y);
         this.size = r;
         this.color = color;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.fixBall();
     }
 
@@ -50,7 +50,7 @@ public class Ball {
             this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             this.color = color;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall();
     }
 
@@ -59,7 +59,7 @@ public class Ball {
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall();
     }
 
@@ -69,7 +69,7 @@ public class Ball {
             this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall();
     }
 
@@ -78,7 +78,7 @@ public class Ball {
             this.size = size;
             Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall();
     }
 
@@ -87,7 +87,7 @@ public class Ball {
         this.size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.fixBall();
     }
 
@@ -96,7 +96,7 @@ public class Ball {
         this.size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.upperBorder = upperBorder;
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
@@ -108,7 +108,7 @@ public class Ball {
         this.size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.upperBorder = upperBorder;
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
@@ -122,7 +122,7 @@ public class Ball {
         this.size = size;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextInt(360) + 1, this.sizeToSpeed());
+        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.upperBorder = upperBorder;
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
