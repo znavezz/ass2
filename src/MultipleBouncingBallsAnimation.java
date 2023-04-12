@@ -5,6 +5,7 @@ import biuoop.GUI;
 import biuoop.Sleeper;
 
 
+import java.awt.*;
 import java.util.ArrayList;
 
 //public class MultipleBouncingBallsAnimation {
@@ -42,8 +43,7 @@ public class MultipleBouncingBallsAnimation {
         ArrayList<Ball> balls = new ArrayList<>();
         for (String string : args) {
             int ballSize = Integer.parseInt(string);
-            Ball newBall = new Ball(ballSize, 0, 0, WIDTH, HEIGHT);
-            balls.add(newBall);
+            balls.add(new Ball(ballSize, 0, 0, WIDTH, HEIGHT));
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();

@@ -24,7 +24,7 @@ public class MultipleFramesBouncingBallsAnimation {
             d.setColor(Color.gray);
             d.fillRectangle(50, 50, 450, 450);
             for (Ball ball : inGreyBalls) {
-                //ball.moveOneStep();
+                ball.moveOneStep();
                 ball.drawOn(d);
             }
             d.setColor(Color.YELLOW);
@@ -34,7 +34,7 @@ public class MultipleFramesBouncingBallsAnimation {
                 ball.drawOn(d);
             }
             gui.show(d);
-            sleeper.sleepFor(150);
+            sleeper.sleepFor(500);
         }
 
 

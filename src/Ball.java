@@ -91,7 +91,7 @@ public class Ball {
         this.fixBall();
     }
 
-    public Ball(Point center, int r, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
+    public Ball(Point center, int r, double leftBorder, double upperBorder, double rightBorder, double downBorder) {
         this.center = center;
         this.size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
@@ -104,8 +104,7 @@ public class Ball {
         this.fixBall();
     }
 
-    public Ball(int r, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
-        this.center = new Point(0, 0);
+    public Ball(int r, double leftBorder, double upperBorder, double rightBorder, double downBorder) {
         this.size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         this.color = randColor;
@@ -114,10 +113,11 @@ public class Ball {
         this.leftBorder = leftBorder;
         this.downBorder = downBorder;
         this.rightBorder = rightBorder;
+        this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
         this.fixBall();
     }
 
-    public Ball(Point center, int size, Color color, int leftBorder, int upperBorder, int rightBorder, int downBorder) {
+    public Ball(Point center, int size, Color color, double leftBorder, double upperBorder, double rightBorder, double downBorder) {
         this.center = center;
         this.size = size;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
@@ -129,6 +129,20 @@ public class Ball {
         this.rightBorder = rightBorder;
         this.fixBall();
     }
+
+    public Ball(Point center, int r, Velocity v, double lBorder, double uBorder, double rBorder, double dBorder) {
+        this.center = center;
+        this.size = r;
+        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        this.color = randColor;
+        this.velocity = v;
+        this.upperBorder = uBorder;
+        this.leftBorder = lBorder;
+        this.downBorder = dBorder;
+        this.rightBorder = rBorder;
+        this.fixBall();
+    }
+
 
 
     // accessors
@@ -229,31 +243,59 @@ public class Ball {
     public Velocity getVelocity() {
         return this.velocity;
     }
+    public void fixLeft() {
+        if (isOutOfLeft()) {
+            this.center.setX(this.size + 1);
+        }
+    }
+    public void fixRight() {
+        if (isOutOfRight()) {
+            this.center.setX(rightBorder - this.size - 1);
+        }
+    }
+    public void fixTop() {
+        if (isOutOfTop()) {
+            this.center.setY(this.size + 1);
+        }
+    }
+    public void fixBottom() {
+        if (isOutOfBottom()) {
+            this.center.setY(downBorder - this.size - 1);
+        }
+    }
 
     public void fixBall() {
+        // edges
         if (isOutOfTop()) {
-            this.center.setY(this.size);
-        } else if (isOutOfBottom()) {
-            this.center.setY(downBorder - this.size);
-        } else if (isOutOfLeft()) {
-            this.center.setX(this.size);
-        } else if (isOutOfRight()) {
-            this.center.setX(rightBorder - this.size);
+            this.center.setY(this.size + upperBorder + 1);
+        }
+        if (isOutOfBottom()) {
+            this.center.setY(downBorder - this.size - 1);
+        }
+        if (isOutOfLeft()) {
+            this.center.setX(this.size + leftBorder + 1);
+        }
+        if (isOutOfRight()) {
+            this.center.setX(rightBorder - this.size - 1);
         }
     }
     public void moveOneStep() {
-        if (this.isOutOfWidth() && this.isOutOfHeight()) {
-            this.fixBall();
-            this.setVelocity(-(this.getVelocity().getDx()), -(this.getVelocity().getDy()));
-            this.center = this.getVelocity().applyToPoint(this.center);
-        }
-        if (this.isOutOfHeight()) {
-            this.fixBall();
+//        if (this.isOutOfWidth() && this.isOutOfHeight()) {
+//            this.fixBall();
+//            this.setVelocity(-(this.getVelocity().getDx()), -(this.getVelocity().getDy()));
+//            this.center = this.getVelocity().applyToPoint(this.center);
+//        }
+        Ball check = new Ball(this.center, this.size, this.velocity,
+                this.leftBorder, this.upperBorder, this.rightBorder, this.downBorder);
+        check.center = check.getVelocity().applyToPoint(check.center);
+
+        if (check.isOutOfHeight()) {
+//            this.fixBall();
             this.setVelocity(this.getVelocity().getDx(), -(this.getVelocity().getDy()));
             this.center = this.getVelocity().applyToPoint(this.center);
         }
-        if (this.isOutOfWidth()) {
-            this.fixBall();
+        if (check.isOutOfWidth()) {
+//            this.fixBall();
             this.setVelocity(-(this.getVelocity().getDx()), this.getVelocity().getDy());
             this.center = this.getVelocity().applyToPoint(this.center);
         }
