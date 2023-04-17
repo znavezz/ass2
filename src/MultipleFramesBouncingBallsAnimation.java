@@ -34,7 +34,7 @@ public class MultipleFramesBouncingBallsAnimation {
                 ball.drawOn(d);
             }
             gui.show(d);
-            sleeper.sleepFor(50);
+            sleeper.sleepFor(15);
         }
 
 

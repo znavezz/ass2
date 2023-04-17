@@ -29,6 +29,12 @@ public class Velocity {
     public double getDy() {
         return this.dy;
     }
+    public double getAngle() {
+        return this.angle;
+    }
+    public double getSpeed() {
+        return this.speed;
+    }
 
     //Setters
 
