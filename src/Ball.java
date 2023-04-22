@@ -286,24 +286,21 @@ public class Ball {
      * @return true if the ball is out of the top border, false otherwise.
      */
     public boolean isOutOfTop() {
-        return (center.getY() - borders.getUp() < size)
-                || Geometry.doubleEquals(center.getY() - borders.getUp(), size);
+        return (center.getY() - borders.getUp() < size);
     }
     /**
      * Checks if the ball is out of the bottom border.
      * @return true if the ball is out of the bottom border, false otherwise.
      */
     public boolean isOutOfBottom() {
-        return (center.getY() + size > borders.getDown())
-                || Geometry.doubleEquals(center.getY() + size, borders.getDown());
+        return (center.getY() + size > borders.getDown());
     }
     /**
      * Checks if the ball is out of the right border.
      * @return true if the ball is out of the right border, false otherwise.
      */
     public boolean isOutOfRight() {
-        return (center.getX() + size > borders.getRight())
-                || Geometry.doubleEquals(center.getX() + size, borders.getRight());
+        return (center.getX() + size > borders.getRight());
     }
 
     /**
@@ -311,7 +308,7 @@ public class Ball {
      * @return true if the ball is out of the left border, false otherwise.
      */
     public boolean isOutOfLeft() {
-        return (center.getX() - borders.getLeft() <= size) || Geometry.doubleEquals(center.getX() - borders.getLeft(), size);
+        return (center.getX() - borders.getLeft() < size);
     }
     /**
      * Checks if the ball is out of the width borders (left or right).
@@ -397,15 +394,15 @@ public class Ball {
                 this.borders);
         check.center = check.getVelocity().applyToPoint(check.center);
 
+        // Calculate the ball's new position
+        this.getVelocity().applyToPoint(this.center);
 
-            if (check.isOutOfHeight() && check.isOutOfWidth()) {
 
-            }
             // Check for horizontal collisions (left and right borders)
             if (check.isOutOfWidth()) {
                 // Reverse the horizontal velocity (dx) and update the new position accordingly
                 this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
-                this.center.setX(this.center.getX() + this.getVelocity().getDx());
+                this.getVelocity().applyToPoint(this.center);
             } else {
                 // No collision, update the x position normally
                 this.center.setX(check.getX());
@@ -414,12 +411,14 @@ public class Ball {
             // Check for vertical collisions (top and bottom borders)
             if (check.isOutOfHeight()) {
                 // Reverse the vertical velocity (dy) and update the new position accordingly
+                this.fixBall();
                 this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
-                this.center.setY(this.center.getY() + this.getVelocity().getDy());
+                this.getVelocity().applyToPoint(this.center);
             } else {
                 // No collision, update the y position normally
                 this.center.setY(check.getY());
             }
+        // Check if the ball moves over the bounds. If so, adjust the position and speed.
         }
 
     /**
