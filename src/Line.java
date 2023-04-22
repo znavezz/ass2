@@ -16,10 +16,8 @@ public class Line {
     //Fields
     private Point start;
     private Point end;
-    private double leftBorder = 0;
-    private double rightBorder = 800;
-    private double upperBorder = 0;
-    private double downBorder = 600;
+    private Borders borders;
+    private Color color = Color.BLACK;
 
     /**
      * Constructs a new Line object with default start and end points (0, 0).
@@ -39,6 +37,11 @@ public class Line {
         this.start = start;
         this.end = end;
     }
+    public Line(Point start, Point end, Color color) {
+        this.start = start;
+        this.end = end;
+        this.color = color;
+    }
 
     /**
      * Constructs a new Line object with the specified coordinates for the start and end points.
@@ -51,6 +54,17 @@ public class Line {
     public Line(double x1, double y1, double x2, double y2) {
         this.start = new Point(x1, y1);
         this.end = new Point(x2, y2);
+    }
+    public Line(double x1, double y1, double x2, double y2, Color color) {
+        this.start = new Point(x1, y1);
+        this.end = new Point(x2, y2);
+        this.color = color;
+    }
+    public Color getColor() {
+        return this.color;
+    }
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     /**
@@ -164,27 +178,26 @@ public class Line {
 
     // Returns true if the lines intersect, false otherwise
     public boolean isIntersecting(Line other) {
+        double x;
+        double y;
+        Point intersection;
         // If both lines are parallel to the Y-axis
         if (this.isParallelToY() && other.isParallelToY()) {
             // Check for overlapping segments
             return this.isOverLap(other);
         } else if (this.isParallelToY() || other.isParallelToY()) {
             // If only one of the lines is parallel to the Y-axis
-            double x;
-            double y;
-            Point intersection;
-
             // Check intersection using isOnLine method
             if (this.isParallelToY()) {
                 x = this.start.getX();
                 y = other.getYOfX(x);
                 intersection = new Point(x, y);
-                return intersection.isOnLine(other);
+                return intersection.isOnLine(other) && intersection.isOnLine(this);
             } else {
                 x = other.start.getX();
                 y = this.getYOfX(x);
                 intersection = new Point(x, y);
-                return intersection.isOnLine(this);
+                return intersection.isOnLine(this) && intersection.isOnLine(other);
             }
         } else {
             // If both lines are not parallel to the Y-axis
@@ -194,10 +207,10 @@ public class Line {
                 return this.isOverLap(other);
             } else {
                 // Compare equations of lines and isolate variables
-                double x = (other.intersectWithYAxis() - this.intersectWithYAxis())
+                x = (other.intersectWithYAxis() - this.intersectWithYAxis())
                         / (this.getSlope() - other.getSlope());
-                double y = this.getYOfX(x);
-                Point intersection = new Point(x, y);
+                y = this.getYOfX(x);
+                intersection = new Point(x, y);
                 return (intersection.isOnLine(this) && intersection.isOnLine(other));
             }
         }
@@ -208,21 +221,28 @@ public class Line {
     // and null otherwise (including cases of inclusion).
     public Point intersectionWith(Line other) {
         double x;
-        Point intersectionPoint;
         if ((!isIntersecting(other))) {
             return null;
         } else if (other.isParallelToY() && !this.isParallelToY()) {
             x = other.start.getX();
-            intersectionPoint = new Point(x, this.getYOfX(x));
-            return intersectionPoint;
+            return new Point(x, this.getYOfX(x));
         } else if (this.isParallelToY() && !other.isParallelToY()) {
             x = this.start.getX();
-            intersectionPoint = new Point(x, other.getYOfX(x));
-            return intersectionPoint;
-        } else {
+            return new Point(x, other.getYOfX(x));
+        }  else {
+            if (this.isOverLap(other)) {
+                if (this.start.equals(other.start)) {
+                    return this.start;
+                } else if (this.end.equals(other.start)) {
+                    return this.end;
+                } else if (this.start.equals(other.end)) {
+                    return this.start;
+                } else {
+                    return this.end;
+                }
+            }
             x = (other.intersectWithYAxis() - this.intersectWithYAxis()) / (this.getSlope() - other.getSlope());
-            intersectionPoint = new Point(x, this.getYOfX(x));
-            return intersectionPoint;
+            return new Point(x, this.getYOfX(x));
         }
     }
 
@@ -232,15 +252,15 @@ public class Line {
                 || ((this.start.equals(other.end())) && (this.end.equals(other.start()))));
     }
 
-    public void drawLine(Line l, DrawSurface d) {
-        d.setColor(Color.BLACK);
-        d.drawLine((int) Math.round(this.start.getX()), (int) Math.round(start.getY()),
+    public void drawLine(DrawSurface d) {
+        d.setColor(this.color);
+        d.drawLine((int) Math.round(this.start.getX()), (int) Math.round(this.start.getY()),
                 (int) Math.round(this.end.getX()), (int) Math.round(this.end.getY()));
     }
 
-    public static Line generateRandomLine() {
-        Point start = Point.generateRandomPoint(0, 0, Point.WIDTH, Point.HEIGHT);
-        Point end = Point.generateRandomPoint(0, 0, Point.WIDTH, Point.HEIGHT);
+    public static Line generateRandomLine(Borders borders) {
+        Point start = Point.generateRandomPoint(borders);
+        Point end = Point.generateRandomPoint(borders);
         Line l = new Line(start, end);
         return l;
     }

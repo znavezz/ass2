@@ -9,15 +9,17 @@ public class MultipleFramesBouncingBallsAnimation {
     public static void main(String[] args) {
         GUI gui = new GUI("title", 800, 600);
         Sleeper sleeper = new Sleeper();
+        Borders greyFrame = new Borders(50, 50, 500, 500);
+        Borders yellowFrame = new Borders(450, 450, 600, 600);
         ArrayList<Ball> inGreyBalls = new ArrayList<>();
         ArrayList<Ball> inYellowBalls = new ArrayList<>();
         for (int i = 0; i < (args.length / 2); i++) {
-            inGreyBalls.add(new Ball(Point.generateRandomPoint(50, 50, 500, 500),
-                    Integer.parseInt(args[i]), 50, 50, 500, 500));
+            inGreyBalls.add(new Ball(Point.generateRandomPoint(greyFrame),
+                    Integer.parseInt(args[i]), greyFrame));
         }
         for (int i = (args.length / 2); i < args.length; i++) {
-            inYellowBalls.add(new Ball(Point.generateRandomPoint(450, 450, 600, 600),
-                    Integer.parseInt(args[i]), 450, 450, 600, 600));
+            inYellowBalls.add(new Ball(Point.generateRandomPoint(yellowFrame),
+                    Integer.parseInt(args[i]), yellowFrame));
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();

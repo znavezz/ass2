@@ -11,10 +11,6 @@
 import java.util.Random;
 
 public class Point {
-    //Frame
-    static final int WIDTH = 800;
-    static final int HEIGHT = 300;
-
     //Fields
     private double x; //x-coordinate
     private double y; //y-coordinate
@@ -119,23 +115,27 @@ public class Point {
         //if the line is parallel to Y axis
         if (l.isParallelToY()) {
             return Geometry.doubleEquals(this.x, l.start().getX())
-                    && this.y <= Math.max(l.start().getY(), l.end().getY())
-                    && this.y >= Math.min(l.start().getY(), l.end().getY());
+                    && this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON
+                    && this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON;
         }
         //otherwise
         return ((Geometry.doubleEquals(this.y, ((l.getSlope() * this.x)) + l.intersectWithYAxis()))
-                && (this.x <= Math.max(l.start().getX(), l.end().getX()))
-                && (this.x >= Math.min(l.start().getX(), l.end().getX()))
-                && (this.y <= Math.max(l.start().getY(), l.end().getY()))
-                && (this.y >= Math.min(l.start().getY(), l.end().getY())));
+                && (this.x <= Math.max(l.start().getX(), l.end().getX()) + Geometry.EPSILON)
+                && (this.x >= Math.min(l.start().getX(), l.end().getX()) - Geometry.EPSILON)
+                && (this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON)
+                && (this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON));
     }
 
-    public static Point generateRandomPoint(double lBorder, double uBorder, double rBorder, double dBorder) {
+    public static Point generateRandomPoint(Borders borders) {
         double x, y, z, w;
         Random rand = new Random(); // create a random-number generator
-        x = rand.nextDouble(rBorder) + lBorder; // get integer in range 1-WIDTH
-        y = rand.nextDouble(dBorder) + uBorder; // get integer in range 1-HEIGHT
+        x = rand.nextDouble(borders.getRight()) + borders.getLeft(); // get integer in range 1-WIDTH
+        y = rand.nextDouble(borders.getDown()) + borders.getUp(); // get integer in range 1-HEIGHT
         Point p = new Point(x, y);
         return p;
+    }
+    public boolean isInBorders(Borders borders) {
+        return this.x <= borders.getRight() && this.x >= borders.getLeft()
+                && this.y <= borders.getDown() && this.y >= borders.getUp();
     }
 }

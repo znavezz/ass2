@@ -8,21 +8,24 @@ import java.util.Random;
 import java.awt.Color;
 
 public class BallsTest1 {
+    private Borders borders = new Borders(WIDTH, HEIGHT);
     static final int WIDTH = 800;
     static final int HEIGHT = 300;
 
     public static void main(String[] args) {
-        Point newPoint = Point.generateRandomPoint(0, 0, WIDTH, HEIGHT);
-        BallsTest1.drawAnimation(Point.generateRandomPoint(0, 0, WIDTH, HEIGHT), 5, 5);
+        Borders borders = new Borders(WIDTH, HEIGHT);
+        Point newPoint = Point.generateRandomPoint(borders);
+        BallsTest1.drawAnimation(Point.generateRandomPoint(borders), 5, 5);
     }
 
 
     public static void drawAnimation(Point start, double dx, double dy) {
         GUI gui = new GUI("BouncingBallAnimation", WIDTH, HEIGHT);
         Sleeper sleeper = new Sleeper();
-        Ball ball = new Ball(new Point(10, 10), 30, java.awt.Color.BLACK, 0, 0, WIDTH, HEIGHT);
-        Ball ball2 = new Ball(Point.generateRandomPoint(0, 0, WIDTH, HEIGHT));
-        Ball ball3 = new Ball(Point.generateRandomPoint(0, 0, WIDTH, HEIGHT));
+        Borders borders = new Borders( 0, 0, WIDTH, HEIGHT);
+        Ball ball = new Ball(new Point(10, 10), 30, java.awt.Color.BLACK, borders);
+        Ball ball2 = new Ball(Point.generateRandomPoint(borders));
+        Ball ball3 = new Ball(Point.generateRandomPoint(borders));
         while (true) {
             Random rand = new Random();
             ball.moveOneStep();

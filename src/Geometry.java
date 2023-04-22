@@ -1,6 +1,6 @@
 public class Geometry {
 
-    static final double COMPARISON_TRESHOLD = 0.00001;
+    static final double EPSILON = 0.00001;
 
     /**
      * @param a
@@ -8,6 +8,6 @@ public class Geometry {
      * @return
      */
     public static boolean doubleEquals(double a, double b) {
-        return Math.abs(a - b) < GeometryTester.Comparison_threshold;
+        return Math.abs(a - b) < EPSILON;
     }
 }

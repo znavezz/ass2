@@ -41,9 +41,10 @@ public class MultipleBouncingBallsAnimation {
         GUI gui = new GUI("MultipleBouncingBallsAnimation", WIDTH, HEIGHT);
         Sleeper sleeper = new Sleeper();
         ArrayList<Ball> balls = new ArrayList<>();
+        Borders borders = new Borders(WIDTH, HEIGHT);
         for (String string : args) {
             int ballSize = Integer.parseInt(string);
-            balls.add(new Ball(ballSize, 0, 0, WIDTH, HEIGHT));
+            balls.add(new Ball(ballSize, borders));
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();

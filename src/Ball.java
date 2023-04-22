@@ -14,16 +14,13 @@ import java.awt.Color;
 
 public class Ball {
     //Frame
-    private static final int SCALINGFACTOR = 100;
+    private static final int SCALINGFACTOR = 50;
     //Fields
     private int size;
     private Color color;
     private Point center;
     private Velocity velocity;
-    private double leftBorder = 0;
-    private double rightBorder = 800;
-    private double upperBorder = 0;
-    private double downBorder = 600;
+    private Borders borders;
     //for convenience so i want create a rand everytime
     private Random rand = new Random();
 
@@ -33,10 +30,10 @@ public class Ball {
      * Ensures the ball is within the borders after initialization.
      */
     public Ball() {
-            this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
-            this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 5;
-            Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-            this.color = randColor;
+            this.center = Point.generateRandomPoint(borders);
+            this.size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                    borders.getDown() - borders.getUp()) / 6) + 5;
+            this.color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall(); // Ensure the ball is within borders
     }
@@ -76,8 +73,9 @@ public class Ball {
      */
     public Ball(Color color) {
 
-            this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
-            this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
+            this.center = Point.generateRandomPoint(borders);
+            this.size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                    borders.getDown() - borders.getUp()) / 6) + 1;
             this.color = color;
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall(); // Ensure the ball is within borders
@@ -89,25 +87,26 @@ public class Ball {
      */
     public Ball(Point center) {
             this.center = center;
-            this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
-            Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-            this.color = randColor;
+            this.size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                    borders.getDown() - borders.getUp()) / 6) + 1;
+            this.color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall(); // Ensure the ball is within borders
     }
     /**
-     * Constructs a Ball with the specified x and y coordinates, a random size and color, and a randomly generated velocity.
+     * Constructs a Ball with the specified x and y coordinates, a random size and color,
+     * and a randomly generated velocity.
      * Ensures the ball is within the borders after initialization.
      * @param x the x-coordinate of the center of the ball.
      * @param y the y-coordinate of the center of the ball.
      */
     public Ball(double x, double y) {
-            this.center.setX(x);
-            this.center.setY(y);
-            this.size = (int) rand.nextDouble(Math.min(rightBorder - leftBorder, downBorder - upperBorder) / 6) + 1;
-            Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-            this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
+            center.setX(x);
+            center.setY(y);
+            size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                    borders.getDown() - borders.getUp()) / 6) + 1;
+            color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+            velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -116,11 +115,10 @@ public class Ball {
      * @param size the radius of the ball.
      */
     public Ball(int size) {
-            this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
+            center = Point.generateRandomPoint(borders);
             this.size = size;
-            Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-            this.color = randColor;
-            this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
+            color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+            velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
             this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -131,10 +129,9 @@ public class Ball {
      */
     public Ball(Point center, int r) {
         this.center = center;
-        this.size = r;
-        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
+        size = r;
+        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -142,42 +139,28 @@ public class Ball {
      * Ensures the ball is within the borders after initialization.
      * @param center the center Point of the ball.
      * @param r the radius of the ball.
-     * @param leftBorder the left border of the ball's environment.
-     * @param upperBorder the upper border of the ball's environment.
-     * @param rightBorder the right border of the ball's environment.
-     * @param downBorder the bottom border of the ball's environment.
+     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int r, double leftBorder, double upperBorder, double rightBorder, double downBorder) {
+    public Ball(Point center, int r, Borders borders) {
         this.center = center;
-        this.size = r;
-        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
-        this.upperBorder = upperBorder;
-        this.leftBorder = leftBorder;
-        this.downBorder = downBorder;
-        this.rightBorder = rightBorder;
+        size = r;
+        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
+        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified size, random color, and borders. The velocity is randomly generated.
      * Ensures the ball is within the borders after initialization.
      * @param r the radius of the ball.
-     * @param leftBorder the left border of the ball's environment.
-     * @param upperBorder the upper border of the ball's environment.
-     * @param rightBorder the right border of the ball's environment.
-     * @param downBorder the bottom border of the ball's environment.
+     * @param borders the borders of the ball.
      */
-    public Ball(int r, double leftBorder, double upperBorder, double rightBorder, double downBorder) {
-        this.size = r;
-        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        this.color = randColor;
-        this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
-        this.upperBorder = upperBorder;
-        this.leftBorder = leftBorder;
-        this.downBorder = downBorder;
-        this.rightBorder = rightBorder;
-        this.center = Point.generateRandomPoint(leftBorder, upperBorder, rightBorder, downBorder);
+    public Ball(int r, Borders borders) {
+        center = Point.generateRandomPoint(borders);
+        size = r;
+        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
+        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -186,22 +169,14 @@ public class Ball {
      * @param center the center Point of the ball.
      * @param size the radius of the ball.
      * @param color the color of the ball.
-     * @param leftBorder the left border of the ball's environment.
-     * @param upperBorder the upper border of the ball's environment.
-     * @param rightBorder the right border of the ball's environment.
-     * @param downBorder the bottom border of the ball's environment.
+     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int size, Color color, double leftBorder, double upperBorder,
-                double rightBorder, double downBorder) {
+    public Ball(Point center, int size, Color color, Borders borders) {
         this.center = center;
         this.size = size;
-        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        this.color = randColor;
+        this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(rand.nextDouble() * 2 * Math.PI, this.sizeToSpeed());
-        this.upperBorder = upperBorder;
-        this.leftBorder = leftBorder;
-        this.downBorder = downBorder;
-        this.rightBorder = rightBorder;
+        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -210,22 +185,20 @@ public class Ball {
      * @param center the center Point of the ball.
      * @param r the radius of the ball.
      * @param v the velocity of the ball.
-     * @param lBorder the left border of the ball's environment.
-     * @param uBorder the upper border of the ball's environment.
-     * @param rBorder the right border of the ball's environment.
-     * @param dBorder the bottom border of the ball's environment.
+     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int r, Velocity v, double lBorder, double uBorder, double rBorder, double dBorder) {
+    public Ball(Point center, int r, Velocity v, Borders borders) {
         this.center = center;
-        this.size = r;
+        size = r;
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        this.color = randColor;
-        this.velocity = v;
-        this.upperBorder = uBorder;
-        this.leftBorder = lBorder;
-        this.downBorder = dBorder;
-        this.rightBorder = rBorder;
+        color = randColor;
+        velocity = v;
+        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
+    }
+
+    public Ball(Borders borders) {
+        this.borders = borders;
     }
 
 
@@ -289,14 +262,8 @@ public class Ball {
         this.size = size;
     }
 
-    public void getInfo() {
-        System.out.println("Size = " + size);
-        System.out.println("Color = " + color.toString());
-        center.toString();
-        System.out.println("Left border = " + leftBorder);
-        System.out.println("Upper border = " + upperBorder);
-        System.out.println("Right border = " + rightBorder);
-        System.out.println("Down border = " + downBorder);
+    public String toString() {
+        return "Size = " + size + "Color = " + color.toString() + center.toString() + borders.toString();
     }
 
     public void setColor(Color color) {
@@ -319,21 +286,24 @@ public class Ball {
      * @return true if the ball is out of the top border, false otherwise.
      */
     public boolean isOutOfTop() {
-        return (this.center.getY() - this.upperBorder <= this.size);
+        return (center.getY() - borders.getUp() < size)
+                || Geometry.doubleEquals(center.getY() - borders.getUp(), size);
     }
     /**
      * Checks if the ball is out of the bottom border.
      * @return true if the ball is out of the bottom border, false otherwise.
      */
     public boolean isOutOfBottom() {
-        return (this.center.getY() + this.size >= downBorder);
+        return (center.getY() + size > borders.getDown())
+                || Geometry.doubleEquals(center.getY() + size, borders.getDown());
     }
     /**
      * Checks if the ball is out of the right border.
      * @return true if the ball is out of the right border, false otherwise.
      */
     public boolean isOutOfRight() {
-        return (this.center.getX() + this.size >= rightBorder);
+        return (center.getX() + size > borders.getRight())
+                || Geometry.doubleEquals(center.getX() + size, borders.getRight());
     }
 
     /**
@@ -341,7 +311,7 @@ public class Ball {
      * @return true if the ball is out of the left border, false otherwise.
      */
     public boolean isOutOfLeft() {
-        return (this.center.getX() - this.leftBorder <= this.size);
+        return (center.getX() - borders.getLeft() <= size) || Geometry.doubleEquals(center.getX() - borders.getLeft(), size);
     }
     /**
      * Checks if the ball is out of the width borders (left or right).
@@ -390,22 +360,22 @@ public class Ball {
     }
     public void fixLeft() {
         if (isOutOfLeft()) {
-            this.center.setX(this.size + leftBorder + 1);
+            this.center.setX(this.size + this.borders.getLeft() + 1);
         }
     }
     public void fixRight() {
         if (isOutOfRight()) {
-            this.center.setX(rightBorder - this.size - 1);
+            this.center.setX(this.borders.getRight() - this.size - 1);
         }
     }
     public void fixTop() {
         if (isOutOfTop()) {
-            this.center.setY(this.size + upperBorder + 1);
+            this.center.setY(this.size + this.borders.getUp() + 1);
         }
     }
     public void fixBottom() {
         if (isOutOfBottom()) {
-            this.center.setY(downBorder - this.size - 1);
+            this.center.setY(this.borders.getDown() - this.size - 1);
         }
     }
 
@@ -424,11 +394,15 @@ public class Ball {
     public void moveOneStep() {
 
         Ball check = new Ball(this.center, this.size, this.velocity,
-                this.leftBorder, this.upperBorder, this.rightBorder, this.downBorder);
+                this.borders);
         check.center = check.getVelocity().applyToPoint(check.center);
 
+
+            if (check.isOutOfHeight() && check.isOutOfWidth()) {
+
+            }
             // Check for horizontal collisions (left and right borders)
-            if (check.isOutOfLeft() || check.isOutOfRight()) {
+            if (check.isOutOfWidth()) {
                 // Reverse the horizontal velocity (dx) and update the new position accordingly
                 this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
                 this.center.setX(this.center.getX() + this.getVelocity().getDx());
@@ -438,7 +412,7 @@ public class Ball {
             }
 
             // Check for vertical collisions (top and bottom borders)
-            if (check.isOutOfTop() || check.isOutOfBottom()) {
+            if (check.isOutOfHeight()) {
                 // Reverse the vertical velocity (dy) and update the new position accordingly
                 this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
                 this.center.setY(this.center.getY() + this.getVelocity().getDy());
