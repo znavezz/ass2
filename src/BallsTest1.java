@@ -22,10 +22,10 @@ public class BallsTest1 {
     public static void drawAnimation(Point start, double dx, double dy) {
         GUI gui = new GUI("BouncingBallAnimation", WIDTH, HEIGHT);
         Sleeper sleeper = new Sleeper();
-        Borders borders = new Borders( 0, 0, WIDTH, HEIGHT);
-        Ball ball = new Ball(new Point(10, 10), 30, java.awt.Color.BLACK, borders);
-        Ball ball2 = new Ball(Point.generateRandomPoint(borders));
-        Ball ball3 = new Ball(Point.generateRandomPoint(borders));
+        Borders borders = new Borders(0, 0, WIDTH, HEIGHT);
+        Ball ball = new Ball();
+        Ball ball2 = new Ball();
+        Ball ball3 = new Ball();
         while (true) {
             Random rand = new Random();
             ball.moveOneStep();

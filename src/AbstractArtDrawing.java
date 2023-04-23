@@ -4,17 +4,28 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.awt.Color;
 
+/**
+ * @author Nave Zehoray 206388746 < znavez@gmail.com >
+ * @version 1.0
+ * @since 2023-03-25
+ * This class creates an abstract art drawing consisting of randomly generated lines and the intersections between them.
+ */
 public class AbstractArtDrawing {
     static final int WIDTH = 400;
     static final int HEIGHT = 300;
 
+    /**
+     * This method creates a GUI window and draws 10 random lines on it.
+     * For each line, a blue circle is drawn at its middle point.
+     * If two lines intersect, a red circle is drawn at the intersection point.
+     */
     public void drawRandomLinesAndIntersection() {
         Random rand = new Random(); // create a random-number generator
         // Create a window with the title "Random Circles Example"
         // which is 400 pixels wide and 300 pixels high.
         GUI gui = new GUI("Abstract Art Drawing", WIDTH, HEIGHT);
         DrawSurface d = gui.getDrawSurface();
-        ArrayList<Line> lines = new ArrayList<Line>();
+        ArrayList<Line> lines = new ArrayList<>();
         for (int i = 0; i < 10; ++i) {
             int x = rand.nextInt(WIDTH) + 1; // get integer in range 1-WIDTH
             int y = rand.nextInt(HEIGHT) + 1; // get integer in range 1-HEIGHT
@@ -40,7 +51,11 @@ public class AbstractArtDrawing {
         }
         gui.show(d);
     }
-
+    /**
+     * This is the main method that creates a new instance of AbstractArtDrawing
+     * and calls its drawRandomLinesAndIntersection() method.
+     * @param args an array of command-line arguments for the application, which are not used in this program.
+     */
     public static void main(String[] args) {
         AbstractArtDrawing newArt = new AbstractArtDrawing();
         newArt.drawRandomLinesAndIntersection();

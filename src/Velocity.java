@@ -16,8 +16,8 @@ public class Velocity {
     }
 
     public static Velocity fromAngleAndSpeed(double angle, double speed) {
-        double dx = speed * Math.sin(angle);
-        double dy = -speed * Math.cos(angle);
+        double dx = speed * Math.sin(Math.toRadians(angle));
+        double dy = -speed * Math.cos(Math.toRadians(angle));
         return new Velocity(dx, dy);
     }
 
@@ -49,9 +49,9 @@ public class Velocity {
 
     // Take a point with position (x,y) and return a new point
     // with position (x+dx, y+dy)
-    public Point applyToPoint(Point p) {
-        double newX = p.getX() + this.dx;
-        double newY = p.getY() + this.dy;
-        return new Point(newX, newY);
+
+    public void applyToPoint(Point p) {
+        p.setX(p.getX() + this.dx);
+        p.setY(p.getY() + this.dy);
     }
 }

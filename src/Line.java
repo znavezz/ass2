@@ -1,51 +1,18 @@
-/**
- * Represents a line with start and end points.
- *
- * @author Nave Zehoray <znavez@gmail.com>
- * @version 1.0
- * @since 2023-04-09
- */
-
-// Import necessary packages
-
 import biuoop.DrawSurface;
-
 import java.awt.Color;
-
+/**
+ * @author Nave Zehoray < znavez@gmail.com >
+ * @version 1.3
+ * @since 2023-04-09
+ * Represents a line with start and end points.
+ */
 public class Line {
     //Fields
     private Point start;
     private Point end;
-    private Borders borders;
     private Color color = Color.BLACK;
-
-    /**
-     * Constructs a new Line object with default start and end points (0, 0).
-     */
-    public Line() {
-        this.start = new Point();
-        this.end = new Point();
-    }
-
-    /**
-     * Constructs a new Line object with the specified start and end points.
-     *
-     * @param start the start point of the line
-     * @param end   the end point of the line
-     */
-    public Line(Point start, Point end) {
-        this.start = start;
-        this.end = end;
-    }
-    public Line(Point start, Point end, Color color) {
-        this.start = start;
-        this.end = end;
-        this.color = color;
-    }
-
     /**
      * Constructs a new Line object with the specified coordinates for the start and end points.
-     *
      * @param x1 the x-coordinate of the start point
      * @param y1 the y-coordinate of the start point
      * @param x2 the x-coordinate of the end point
@@ -55,54 +22,40 @@ public class Line {
         this.start = new Point(x1, y1);
         this.end = new Point(x2, y2);
     }
+    /**
+     * Constructs a new Line object with the specified coordinates for the start and end points and color.
+     * @param x1 the x-coordinate of the start point
+     * @param y1 the y-coordinate of the start point
+     * @param x2 the x-coordinate of the end point
+     * @param y2 the y-coordinate of the end point
+     * @param color the color of the line
+     */
     public Line(double x1, double y1, double x2, double y2, Color color) {
         this.start = new Point(x1, y1);
         this.end = new Point(x2, y2);
         this.color = color;
     }
-    public Color getColor() {
-        return this.color;
+    //Commands
+    /**
+     * Draws this line on the given DrawSurface using its color.
+     * @param d the DrawSurface on which to draw this line
+     */
+    public void drawLine(DrawSurface d) {
+        d.setColor(this.color);
+        d.drawLine((int) Math.round(this.start.getX()), (int) Math.round(this.start.getY()),
+                (int) Math.round(this.end.getX()), (int) Math.round(this.end.getY()));
     }
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
+    //Queries
     /**
      * Returns the Y value of the line at the given X coordinate.
-     *
      * @param x the X coordinate
      * @return the Y value of the line at the given X coordinate
      */
     public double getYOfX(double x) {
         return (this.getSlope() * x) + this.intersectWithYAxis(); //Isolate variables in a straight line equation
     }
-
-    /**
-     * Returns the X value of the line at the given Y coordinate.
-     *
-     * @param y the Y coordinate
-     * @return the X value of the line at the given Y coordinate
-     */
-    public double getXOfY(double y) {
-        if (this.isParallelToY()) {
-            return this.start.getX();
-        }
-        return (y - this.intersectWithYAxis()) / this.getSlope(); //Isolate variables in a straight line equation
-    }
-
-
-    /**
-     * Returns the length of the line.
-     *
-     * @return the length of the line
-     */
-    public double length() {
-        return this.start.distance(this.end);
-    }
-
     /**
      * Returns the slope of the line.
-     *
      * @return the slope of the line
      */
     public double getSlope() {
@@ -110,54 +63,48 @@ public class Line {
         double deltaY = this.start.getY() - this.end.getY();
         return (deltaY / deltaX); //slope formula
     }
-
     /**
      * Returns the middle point of the line.
-     *
      * @return the middle point of the line
      */
     public Point middle() {
-        Point middle = new Point(((this.start.getX() + this.end.getX()) / 2),
+        return new Point(((this.start.getX() + this.end.getX()) / 2),
                 ((this.start.getY() + this.end.getY()) / 2));
-        return middle;
     }
-
     /**
      * Returns the start point of the line.
-     *
      * @return the start point of the line
      */
     public Point start() {
         return this.start;
     }
-
     /**
      * Returns the end point of the line.
-     *
      * @return the end point of the line
      */
     public Point end() {
         return this.end;
     }
-
-    public void setStart(Point start) {
-        this.start = start;
-    }
-
-    public void setEnd(Point end) {
-        this.end = end;
-    }
-
-    // Return the intersection point of the line with the Y axis
+    /**
+     * Returns the intersection point of the line with the Y-axis.
+     * @return the intersection point of the line with the Y-axis
+     */
     public double intersectWithYAxis() {
         //Isolate variables in a straight line equation
         return (this.start.getY() - (this.getSlope() * this.start.getX()));
     }
-
+    /**
+     * Returns true if the line is parallel to the Y-axis, false otherwise.
+     * @return true if the line is parallel to the Y-axis, false otherwise
+     */
     public boolean isParallelToY() {
         return (Geometry.doubleEquals(this.start.getX(), this.end.getX()));
     }
-
+    /**
+     * Returns true if this line overlaps with the other line, false otherwise.
+     * @param other the other line to check for overlap with this line
+     * @return true if this line overlaps with the other line, false otherwise
+     */
     public boolean isOverLap(Line other) {
         if (this.isParallelToY() && other.isParallelToY()
                 && Geometry.doubleEquals(this.start.getX(), other.start.getX())) {
@@ -175,8 +122,11 @@ public class Line {
                     && (other.start.isOnLine(other) || other.end.isOnLine(other)));
         }
     }
-
-    // Returns true if the lines intersect, false otherwise
+    /**
+     * Returns true if this line intersects with the other line, false otherwise.
+     * @param other the other line to check for intersection with this line
+     * @return true if this line intersects with the other line, false otherwise
+     */
     public boolean isIntersecting(Line other) {
         double x;
         double y;
@@ -215,10 +165,12 @@ public class Line {
             }
         }
     }
-
-
-    // Returns the intersection point if the lines intersect,
-    // and null otherwise (including cases of inclusion).
+    /**
+     * Returns the intersection point if this line intersects with the other line,
+     * and null otherwise (including cases of inclusion).
+     * @param other the other line to check for intersection with this line
+     * @return the intersection point if this line intersects with the other line, and null otherwise
+     */
     public Point intersectionWith(Line other) {
         double x;
         if ((!isIntersecting(other))) {
@@ -229,7 +181,7 @@ public class Line {
         } else if (this.isParallelToY() && !other.isParallelToY()) {
             x = this.start.getX();
             return new Point(x, other.getYOfX(x));
-        }  else {
+        } else {
             if (this.isOverLap(other)) {
                 if (this.start.equals(other.start)) {
                     return this.start;
@@ -245,23 +197,13 @@ public class Line {
             return new Point(x, this.getYOfX(x));
         }
     }
-
-    // equals -- return true if the lines are equal, false otherwise
+    /**
+     * Returns true if this line is equal to the other line, false otherwise.
+     * @param other the other line to check for equality with this line
+     * @return true if this line is equal to the other line, false otherwise
+     */
     public boolean isEquals(Line other) {
         return (((this.start.equals(other.start())) && (this.end.equals(other.end())))
                 || ((this.start.equals(other.end())) && (this.end.equals(other.start()))));
-    }
-
-    public void drawLine(DrawSurface d) {
-        d.setColor(this.color);
-        d.drawLine((int) Math.round(this.start.getX()), (int) Math.round(this.start.getY()),
-                (int) Math.round(this.end.getX()), (int) Math.round(this.end.getY()));
-    }
-
-    public static Line generateRandomLine(Borders borders) {
-        Point start = Point.generateRandomPoint(borders);
-        Point end = Point.generateRandomPoint(borders);
-        Line l = new Line(start, end);
-        return l;
     }
 }
