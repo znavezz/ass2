@@ -30,7 +30,10 @@ public class Borders {
     public double getDown() {
         return down;
     }
-
+    public String toString() {
+        return "Left border = " + left + "Upper border = " + up + "Right border = "
+                + right + "Down border = " + down;
+    }
     public void setLeft(double left) {
         this.left = left;
     }
@@ -43,8 +46,9 @@ public class Borders {
     public void setDown(double down) {
         this.down = down;
     }
-    public String toString() {
-        return "Left border = " + left + "Upper border = " + up + "Right border = "
-                + right + "Down border = " + down;
+    public Point generateRandomPoint() {
+        return new Point(Geometry.RAND.nextDouble(right + left),
+                Geometry.RAND.nextDouble(down + up));
     }
+
 }

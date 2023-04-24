@@ -1,7 +1,10 @@
+import java.util.Random;
+
 // Velocity specifies the change in position on the `x` and the `y` axes.
 public class Velocity {
 
     //Fields
+    private final Random rand = new Random();
     private double dx;
     private double dy;
     private double angle;
@@ -35,7 +38,6 @@ public class Velocity {
     public double getSpeed() {
         return this.speed;
     }
-
     //Setters
 
     public void setDx(double dx) {

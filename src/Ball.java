@@ -15,7 +15,7 @@ public class Ball {
     private static final int SCALING_FACTOR = 100;
     private static final double DEFAULT_WIDTH = 800;
     private static final double DEFAULT_HEIGHT = 600;
-    private final Random rand = new Random();
+    private static Random rand = new Random();
     //Fields
     private Borders borders;
     private Point center;
@@ -30,7 +30,7 @@ public class Ball {
      */
     public Ball() {
             borders = new Borders(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-            center = Point.generateRandomPoint(borders);
+            center = borders.generateRandomPoint();
             size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
                     borders.getDown() - borders.getUp()) / 6) + 10;
             color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
@@ -51,7 +51,7 @@ public class Ball {
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
         this.borders = borders;
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified size, random color, and borders. The velocity is randomly generated.
@@ -60,12 +60,12 @@ public class Ball {
      * @param borders the borders of the ball.
      */
     public Ball(int r, Borders borders) {
-        center = Point.generateRandomPoint(borders);
+        center = borders.generateRandomPoint();
         size = r;
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
         this.borders = borders;
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified center, size, random color, and borders. The velocity is randomly generated.
@@ -81,7 +81,7 @@ public class Ball {
         this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
         this.borders = borders;
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified center, size, color, borders, and velocity.
@@ -98,7 +98,7 @@ public class Ball {
         color = randColor;
         velocity = v;
         this.borders = borders;
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with random attributes (center, size, color, and angle) and specified borders.
@@ -107,12 +107,19 @@ public class Ball {
      */
     public Ball(Borders borders) {
         this.borders = borders;
-        center = Point.generateRandomPoint(borders);
+        center = borders.generateRandomPoint();
         size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
                 borders.getDown() - borders.getUp()) / 6) + 10;
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
         fixBall(); // Ensure the ball is within borders
+    }
+    public Ball(Point center, Borders borders, double dx, double dy) {
+        this.borders = borders;
+        this.center = center;
+        this.velocity = new Velocity(dx, dy);
+        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        fixBall();
     }
     //Commands
     /**
@@ -145,6 +152,9 @@ public class Ball {
     public void setColor(Color color) {
         this.color = color;
     }
+    public void setBorders(Borders borders) {
+        this.borders = borders;
+    }
     /**
      * Draws the ball on the given DrawSurface.
      * @param surface the DrawSurface on which the ball should be drawn.
@@ -161,6 +171,9 @@ public class Ball {
     public void setVelocity(double dx, double dy) {
         this.velocity.setDx(dx);
         this.velocity.setDy(dy);
+    }
+    public void setVelocity(Velocity velocity) {
+        this.velocity = velocity;
     }
     /**
      * Adjusts the ball's position if it is out of the left border and reverses its horizontal velocity.
@@ -201,9 +214,19 @@ public class Ball {
     /**
      * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
      */
+    public void fixPosition() {
+        fixLeft();
+        fixTop();
+        fixRight();
+        fixBottom();
+    }
     public void fixSize() {
-        if (size > (Math.min(borders.getDown(), borders.getRight()) / 6)) {
-            size = (int) (Math.min(borders.getDown(), borders.getRight()) / 6);
+        double rangeX = borders.getRight() - borders.getLeft();
+        double rangeY = borders.getDown() - borders.getUp();
+        if (size > (Math.min(rangeY, rangeX) / 6)) {
+            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
+        } else if (size < 5) {
+            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
         }
     }
     /**
@@ -211,12 +234,8 @@ public class Ball {
      */
     public void fixBall() {
         // edges
-        fixTop();
-        fixBottom();
-        fixLeft();
-        fixRight();
         fixSize();
-
+        fixPosition();
     }
     /**
      * Updates the ball's position based on its velocity and checks for collisions with borders.

@@ -4,8 +4,10 @@ import biuoop.Sleeper;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MultipleFramesBouncingBallsAnimation {
+    private static Random rand = new Random();
     public static void main(String[] args) {
         GUI gui = new GUI("title", 800, 600);
         Sleeper sleeper = new Sleeper();
@@ -14,12 +16,24 @@ public class MultipleFramesBouncingBallsAnimation {
         ArrayList<Ball> inGreyBalls = new ArrayList<>();
         ArrayList<Ball> inYellowBalls = new ArrayList<>();
         for (int i = 0; i < (args.length / 2); i++) {
-            inGreyBalls.add(new Ball(Point.generateRandomPoint(greyFrame),
-                    Integer.parseInt(args[i]), greyFrame));
+            try {
+                inGreyBalls.add(new Ball(Integer.parseInt(args[i]), greyFrame));
+            } catch (Exception e) {
+                inGreyBalls.add(new Ball((int) rand.nextDouble(Math.min(greyFrame.getRight() - greyFrame.getLeft(),
+                        greyFrame.getDown() - greyFrame.getUp()) / 6) + 10, greyFrame));
+                System.out.println("The input doesn't match the required type (int).");
+                System.out.println("Random Ball in grey frame has been generated.");
+            }
         }
         for (int i = (args.length / 2); i < args.length; i++) {
-            inYellowBalls.add(new Ball(Point.generateRandomPoint(yellowFrame),
-                    Integer.parseInt(args[i]), yellowFrame));
+            try {
+                inYellowBalls.add(new Ball(Integer.parseInt(args[i]), yellowFrame));
+            } catch (Exception e) {
+                inYellowBalls.add(new Ball((int) rand.nextDouble(Math.min(yellowFrame.getRight() - yellowFrame.getLeft(),
+                        yellowFrame.getDown() - yellowFrame.getUp()) / 6) + 10, yellowFrame));
+                System.out.println("The input doesn't match the required type (int).");
+                System.out.println("Random Ball in yellow frame has been generated.");
+            }
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();
