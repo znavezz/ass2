@@ -114,6 +114,20 @@ public class Ball {
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
         fixBall(); // Ensure the ball is within borders
     }
+
+    public Ball(Point start, Borders borders, double dx, double dy) {
+        center = start;
+        this.borders = borders;
+        if (dx > 30) {
+            dx = 30;
+        }
+        if (dy > 30) {
+            dy = 30;
+        }
+        velocity = new Velocity(dx, dy);
+        size = velocityToSize();
+        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+    }
     //Commands
     /**
      * Sets the center of the ball.
@@ -358,5 +372,8 @@ public class Ball {
             speed = SCALING_FACTOR / this.size;
         }
         return speed;
+    }
+    private int velocityToSize() {
+        return (int) (SCALING_FACTOR / velocity.getSpeed());
     }
 }

@@ -4,9 +4,6 @@ public class Velocity {
     //Fields
     private double dx;
     private double dy;
-    private double angle;
-    private double speed;
-
     // constructor
     public Velocity(double dx, double dy) {
         this.dx = dx;
@@ -30,10 +27,10 @@ public class Velocity {
         return this.dy;
     }
     public double getAngle() {
-        return this.angle;
+        return Math.atan2(-this.dy, this.dx);
     }
     public double getSpeed() {
-        return this.speed;
+        return Math.sqrt((dx * dx) + (dy * dy));
     }
 
     //Setters

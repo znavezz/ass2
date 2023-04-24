@@ -47,4 +47,8 @@ public class Borders {
         return "Left border = " + left + "Upper border = " + up + "Right border = "
                 + right + "Down border = " + down;
     }
+
+    public Point generateRandomPoint() {
+
+    }
 }
