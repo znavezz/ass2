@@ -4,8 +4,10 @@ import biuoop.Sleeper;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class MultipleFramesBouncingBallsAnimation {
+    private static Random rand = new Random();
     public static void main(String[] args) {
         GUI gui = new GUI("title", 800, 600);
         Sleeper sleeper = new Sleeper();
