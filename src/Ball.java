@@ -12,7 +12,7 @@ import java.awt.Color;
  */
 public class Ball {
     //Frame
-    private static final int SCALING_FACTOR = 100;
+    private static final int SCALING_FACTOR = 300;
     private static final double DEFAULT_WIDTH = 800;
     private static final double DEFAULT_HEIGHT = 600;
     private final Random rand = new Random();
@@ -120,9 +120,13 @@ public class Ball {
         this.borders = borders;
         if (dx > 30) {
             dx = 30;
+        } else if (dx < 0 || Geometry.doubleEquals(dx, 0)) {
+            dx = 1;
         }
         if (dy > 30) {
             dy = 30;
+        } else if (dy < 0 || Geometry.doubleEquals(dy, 0)) {
+            dy = 1;
         }
         velocity = new Velocity(dx, dy);
         size = velocityToSize();
@@ -365,15 +369,17 @@ public class Ball {
      * @return the calculated speed value based on the ball's size.
      */
     private double sizeToSpeed() {
-        double speed;
         if (this.size > 50) {
-            speed = SCALING_FACTOR / 50;
+            return SCALING_FACTOR / 50;
         } else {
-            speed = SCALING_FACTOR / this.size;
+            return SCALING_FACTOR / this.size;
         }
-        return speed;
     }
     private int velocityToSize() {
-        return (int) (SCALING_FACTOR / velocity.getSpeed());
+        if (velocity.getSpeed() > 30) {
+            return (int) (SCALING_FACTOR / 30);
+        } else {
+            return (int) (SCALING_FACTOR / velocity.getSpeed());
+        }
     }
 }

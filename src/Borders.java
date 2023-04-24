@@ -49,6 +49,7 @@ public class Borders {
     }
 
     public Point generateRandomPoint() {
-
+        return new Point(Geometry.RAND.nextDouble(right + left),
+                Geometry.RAND.nextDouble(down + up));
     }
 }

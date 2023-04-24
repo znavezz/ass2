@@ -33,7 +33,7 @@ public class BouncingBallAnimation {
     }
 
     public static void drawAnimation(Point start, double dx, double dy) {
-        GUI gui = new GUI("title", (int) (borders.getRight() - borders.getLeft()),
+        GUI gui = new GUI("BouncingBallAnimation", (int) (borders.getRight() - borders.getLeft()),
                 (int) (borders.getDown() - borders.getUp()));
         Sleeper sleeper = new Sleeper();
         Ball ball = new Ball(start, borders, dx, dy);
