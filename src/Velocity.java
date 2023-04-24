@@ -27,7 +27,7 @@ public class Velocity {
         return this.dy;
     }
     public double getAngle() {
-        return Math.atan2(-this.dy, this.dx);
+        return Math.atan2(dy, dx);
     }
     public double getSpeed() {
         return Math.sqrt((dx * dx) + (dy * dy));

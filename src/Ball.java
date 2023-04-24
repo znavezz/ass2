@@ -46,11 +46,12 @@ public class Ball {
      * @param borders the borders of the ball.
      */
     public Ball(Point center, int r, Borders borders) {
+        this.borders = borders;
         this.center = center;
         size = r;
+        fixSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -60,11 +61,12 @@ public class Ball {
      * @param borders the borders of the ball.
      */
     public Ball(int r, Borders borders) {
+        this.borders = borders;
         center = Point.generateRandomPoint(borders);
         size = r;
+        fixSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -76,11 +78,12 @@ public class Ball {
      * @param borders the borders of the ball.
      */
     public Ball(Point center, int size, Color color, Borders borders) {
+        this.borders = borders;
         this.center = center;
         this.size = size;
+        fixSize();
         this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -92,12 +95,13 @@ public class Ball {
      * @param borders the borders of the ball.
      */
     public Ball(Point center, int r, Velocity v, Borders borders) {
+        this.borders = borders;
         this.center = center;
         size = r;
+        fixSize();
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         color = randColor;
         velocity = v;
-        this.borders = borders;
         this.fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -116,8 +120,8 @@ public class Ball {
     }
 
     public Ball(Point start, Borders borders, double dx, double dy) {
-        center = start;
         this.borders = borders;
+        center = start;
         if (dx > 30) {
             dx = 30;
         } else if (dx < 0 || Geometry.doubleEquals(dx, 0)) {
@@ -219,9 +223,19 @@ public class Ball {
     /**
      * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
      */
+    public void fixPosition() {
+        fixLeft();
+        fixTop();
+        fixRight();
+        fixBottom();
+    }
     public void fixSize() {
-        if (size > (Math.min(borders.getDown(), borders.getRight()) / 6)) {
-            size = (int) (Math.min(borders.getDown(), borders.getRight()) / 6);
+        double rangeX = borders.getRight() - borders.getLeft();
+        double rangeY = borders.getDown() - borders.getUp();
+        if (size > (Math.min(rangeY, rangeX) / 4)) {
+            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
+        } else if (size < 5) {
+            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
         }
     }
     /**
@@ -229,12 +243,8 @@ public class Ball {
      */
     public void fixBall() {
         // edges
-        fixTop();
-        fixBottom();
-        fixLeft();
-        fixRight();
         fixSize();
-
+        fixPosition();
     }
     /**
      * Updates the ball's position based on its velocity and checks for collisions with borders.
@@ -369,7 +379,7 @@ public class Ball {
      * @return the calculated speed value based on the ball's size.
      */
     private double sizeToSpeed() {
-        if (this.size > 50) {
+        if (this.size > 100) {
             return SCALING_FACTOR / 50;
         } else {
             return SCALING_FACTOR / this.size;
