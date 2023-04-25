@@ -1,13 +1,11 @@
 /**
  * Represents a point with x and y coordinates.
- * @author Nave Zehoray 206388746 < znavez@gmail.com >
- * @version 1.0
- * @since 2023-04-08
  */
 public class Point {
     //Fields
     private double x;
     private double y;
+    //Constructors
     /**
      * Constructs a new Point object with default x and y coordinates (0, 0).
      */

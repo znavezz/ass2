@@ -3,12 +3,21 @@ import biuoop.GUI;
 import biuoop.Sleeper;
 
 import java.util.Random;
+/**
+ * @author Nave Zehoray 206388746 < znavez@gmail.com >
+ * The BouncingBallAnimation class is responsible for creating and running the animation
+ * of a ball bouncing within the borders of a window.
+ */
 
 public class BouncingBallAnimation {
     private static Random rand = new Random();
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
     private static Borders borders = new Borders(WIDTH, HEIGHT);
+    /**
+     * The main method runs the BouncingBallAnimation.
+     * @param args optional command-line arguments for start point and velocity.
+     */
     public static void main(String[] args) {
         Point start;
         double dx;
@@ -31,7 +40,12 @@ public class BouncingBallAnimation {
         }
         drawAnimation(start, dx, dy);
     }
-
+    /**
+     * Draws and updates the animation of the bouncing ball.
+     * @param start the initial position of the ball.
+     * @param dx the x component of the ball's velocity.
+     * @param dy the y component of the ball's velocity.
+     */
     public static void drawAnimation(Point start, double dx, double dy) {
         GUI gui = new GUI("BouncingBallAnimation", (int) (borders.getRight() - borders.getLeft()),
                 (int) (borders.getDown() - borders.getUp()));

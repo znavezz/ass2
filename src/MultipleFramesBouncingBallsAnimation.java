@@ -5,9 +5,18 @@ import biuoop.Sleeper;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
-
+/**
+ * The MultipleFramesBouncingBallsAnimation class creates an animation of multiple bouncing balls
+ * within two rectangular areas (frames) with different background colors. It takes an array of integers
+ * as input, where each integer represents the radius of a ball. If the input is not an integer or there
+ * are not enough balls, random balls are generated.
+ */
 public class MultipleFramesBouncingBallsAnimation {
     private static Random rand = new Random();
+    /**
+     * The main method runs the multiple bouncing balls animation within two frames.
+     * @param args an array of strings, where each string represents the radius of a ball.
+     */
     public static void main(String[] args) {
         GUI gui = new GUI("MultipleFramesBouncingBallsAnimation", 800, 600);
         Sleeper sleeper = new Sleeper();

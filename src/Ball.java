@@ -11,12 +11,11 @@ import java.awt.Color;
  * @since 2023-04-12
  */
 public class Ball {
-    //Frame
+    //Fields
     private static final int SCALING_FACTOR = 300;
     private static final double DEFAULT_WIDTH = 800;
     private static final double DEFAULT_HEIGHT = 600;
     private final Random rand = new Random();
-    //Fields
     private Borders borders;
     private Point center;
     private int size;
@@ -119,7 +118,13 @@ public class Ball {
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
         fixBall(); // Ensure the ball is within borders
     }
-
+    /**
+     * Constructs a Ball object with a specified starting point, borders, and velocity components.
+     * @param start the starting point of the ball's center.
+     * @param borders the borders within which the ball should stay.
+     * @param dx the horizontal component of the ball's velocity.
+     * @param dy the vertical component of the ball's velocity.
+     */
     public Ball(Point start, Borders borders, double dx, double dy) {
         this.borders = borders;
         center = start;
@@ -231,6 +236,10 @@ public class Ball {
         fixRight();
         fixBottom();
     }
+    /**
+     * Ensures that the ball's size is within the minimum and maximum allowed size limits.
+     * If the size is outside the limits, it randomly assigns a new size within the allowed range.
+     */
     public void fixSize() {
         if (size > (getMaxSize())) {
             size = rand.nextInt(getMaxSize()) + getMinSize();
@@ -268,7 +277,6 @@ public class Ball {
         // Check if the ball moves over the bounds. If so, adjust the position and speed.
         }
     //Queries
-    // accessors
     /**
      * @return the x-coordinate of the ball's center.
      */
@@ -390,17 +398,32 @@ public class Ball {
             return SCALING_FACTOR / this.size;
         }
     }
+    /**
+     * Converts the ball's velocity magnitude to a size value by dividing the scaling factor
+     * by either the magnitude or 30 (whichever is smaller).
+     * @return the calculated size value
+     */
+
     public int velocityToSize() {
         if (velocity.getMagnitude() > 30) {
-            return (int) (SCALING_FACTOR / 30);
+            return (SCALING_FACTOR / 30);
         } else {
             return (int) (SCALING_FACTOR / velocity.getMagnitude());
         }
     }
+    /**
+     * Calculates the maximum allowed size for the ball based on the dimensions of the borders.
+     * @return the maximum size
+     */
     public int getMaxSize() {
         return (int) Math.min(borders.getRight() - borders.getLeft(),
                 borders.getDown() - borders.getUp()) / 4;
     }
+    /**
+     * Calculates the minimum allowed size for the ball based on the dimensions of the borders.
+     * The minimum size cannot be smaller than 5.
+     * @return the minimum size allowed
+     */
     public int getMinSize() {
         return Math.min(((int) Math.min(borders.getRight() - borders.getLeft(),
                 borders.getDown() - borders.getUp()) / 20), 5);

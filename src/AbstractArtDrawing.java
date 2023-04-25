@@ -6,14 +6,20 @@ import java.awt.Color;
 
 /**
  * @author Nave Zehoray 206388746 < znavez@gmail.com >
- * @version 1.0
- * @since 2023-03-25
  * This class creates an abstract art drawing consisting of randomly generated lines and the intersections between them.
  */
 public class AbstractArtDrawing {
     static final int WIDTH = 400;
     static final int HEIGHT = 300;
-
+    /**
+     * This is the main method that creates a new instance of AbstractArtDrawing
+     * and calls its drawRandomLinesAndIntersection() method.
+     * @param args an array of command-line arguments for the application, which are not used in this program.
+     */
+    public static void main(String[] args) {
+        AbstractArtDrawing newArt = new AbstractArtDrawing();
+        newArt.drawRandomLinesAndIntersection();
+    }
     /**
      * This method creates a GUI window and draws 10 random lines on it.
      * For each line, a blue circle is drawn at its middle point.
@@ -50,14 +56,5 @@ public class AbstractArtDrawing {
             }
         }
         gui.show(d);
-    }
-    /**
-     * This is the main method that creates a new instance of AbstractArtDrawing
-     * and calls its drawRandomLinesAndIntersection() method.
-     * @param args an array of command-line arguments for the application, which are not used in this program.
-     */
-    public static void main(String[] args) {
-        AbstractArtDrawing newArt = new AbstractArtDrawing();
-        newArt.drawRandomLinesAndIntersection();
     }
 }

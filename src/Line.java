@@ -11,6 +11,7 @@ public class Line {
     private Point start;
     private Point end;
     private Color color = Color.BLACK;
+    //Constructors
     /**
      * Constructs a new Line object with the specified coordinates for the start and end points.
      * @param x1 the x-coordinate of the start point
