@@ -53,7 +53,7 @@ public class Point {
      */
     //Queries
     public String toString() {
-        return "x = " + this.x + "    y = " + this.y;
+        return "(" + this.x + "," + this.y + ")";
     }
     /**
      * Calculates the distance between this point and another point.

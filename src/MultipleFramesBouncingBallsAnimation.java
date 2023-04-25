@@ -9,19 +9,43 @@ import java.util.Random;
 public class MultipleFramesBouncingBallsAnimation {
     private static Random rand = new Random();
     public static void main(String[] args) {
-        GUI gui = new GUI("title", 800, 600);
+        GUI gui = new GUI("MultipleFramesBouncingBallsAnimation", 800, 600);
         Sleeper sleeper = new Sleeper();
         Borders greyFrame = new Borders(50, 50, 500, 500);
         Borders yellowFrame = new Borders(450, 450, 600, 600);
         ArrayList<Ball> inGreyBalls = new ArrayList<>();
         ArrayList<Ball> inYellowBalls = new ArrayList<>();
         for (int i = 0; i < (args.length / 2); i++) {
-            inGreyBalls.add(new Ball(Point.generateRandomPoint(greyFrame),
-                    Integer.parseInt(args[i]), greyFrame));
+            try {
+                inGreyBalls.add(new Ball(Integer.parseInt(args[i]), greyFrame));
+            } catch (Exception e) {
+                inGreyBalls.add(new Ball(greyFrame));
+                System.out.println("The input doesn't match the required type (int).");
+                System.out.println("Random Ball in grey frame has been generated.");
+            }
         }
         for (int i = (args.length / 2); i < args.length; i++) {
-            inYellowBalls.add(new Ball(Point.generateRandomPoint(yellowFrame),
-                    Integer.parseInt(args[i]), yellowFrame));
+            try {
+                inYellowBalls.add(new Ball(Integer.parseInt(args[i]), yellowFrame));
+            } catch (Exception e) {
+                inYellowBalls.add(new Ball(yellowFrame));
+                System.out.println("The input doesn't match the required type (int).");
+                System.out.println("Random Ball in yellow frame has been generated.");
+            }
+        }
+        if (inGreyBalls.size() < 3) {
+            inGreyBalls.add(new Ball(greyFrame));
+            inGreyBalls.add(new Ball(greyFrame));
+            inGreyBalls.add(new Ball(greyFrame));
+            System.out.println("There want enough Balls");
+            System.out.println("Random Balls in grey frame has been generated.");
+        }
+        if (inYellowBalls.size() < 3) {
+            inYellowBalls.add(new Ball(yellowFrame));
+            inYellowBalls.add(new Ball(yellowFrame));
+            inYellowBalls.add(new Ball(yellowFrame));
+            System.out.println("There want enough Balls");
+            System.out.println("Random Balls in grey frame has been generated.");
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();
@@ -38,7 +62,7 @@ public class MultipleFramesBouncingBallsAnimation {
                 ball.drawOn(d);
             }
             gui.show(d);
-            sleeper.sleepFor(15);
+            sleeper.sleepFor(30);
         }
 
 

@@ -29,12 +29,14 @@ public class Velocity {
     public double getAngle() {
         return Math.atan2(dy, dx);
     }
-    public double getSpeed() {
+    public double getMagnitude() {
         return Math.sqrt((dx * dx) + (dy * dy));
     }
 
     //Setters
-
+    public String toString() {
+        return "Dx = " + dx + " Dy = " + dy;
+    }
     public void setDx(double dx) {
         this.dx = dx;
     }

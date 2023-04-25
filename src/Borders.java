@@ -44,8 +44,8 @@ public class Borders {
         this.down = down;
     }
     public String toString() {
-        return "Left border = " + left + "Upper border = " + up + "Right border = "
-                + right + "Down border = " + down;
+        return "Left border = " + left + " Upper border = " + up + " Right border = "
+                + right + " Down border = " + down;
     }
 
     public Point generateRandomPoint() {

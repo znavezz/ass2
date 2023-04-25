@@ -24,7 +24,20 @@ public class MultipleBouncingBallsAnimation {
                         borders.getDown() - borders.getUp()) / 6) + 10, borders));
                 System.out.println("The input doesn't match the required type (int).");
                 System.out.println("Random point has been generated.");
+                if (balls.size() < 3) {
+                    balls.add(new Ball((int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                            borders.getDown() - borders.getUp()) / 6) + 10, borders));
+                    balls.add(new Ball((int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                            borders.getDown() - borders.getUp()) / 6) + 10, borders));
+                    balls.add(new Ball((int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
+                            borders.getDown() - borders.getUp()) / 6) + 10, borders));
+                    System.out.println("There want enough Balls");
+                    System.out.println("Random Balls has been generated.");
+                }
             }
+        }
+        for (Ball ball : balls) {
+            System.out.println(ball.toString());
         }
         while (true) {
             DrawSurface d = gui.getDrawSurface();
@@ -33,7 +46,7 @@ public class MultipleBouncingBallsAnimation {
                 ball.drawOn(d);
             }
             gui.show(d);
-            sleeper.sleepFor(50);
+            sleeper.sleepFor(30);
         }
     }
 }

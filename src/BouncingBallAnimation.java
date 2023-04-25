@@ -42,7 +42,7 @@ public class BouncingBallAnimation {
             DrawSurface d = gui.getDrawSurface();
             ball.drawOn(d);
             gui.show(d);
-            sleeper.sleepFor(25);  // wait for 50 milliseconds.
+            sleeper.sleepFor(30);  // wait for 50 milliseconds.
         }
     }
 }

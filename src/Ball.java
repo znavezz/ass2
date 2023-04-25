@@ -23,6 +23,7 @@ public class Ball {
     private Velocity velocity;
     private Color color;
 
+
     //constructors
     /**
      * Constructs a Ball with random attributes (center, size, color, and angle).
@@ -31,8 +32,7 @@ public class Ball {
     public Ball() {
             borders = new Borders(DEFAULT_WIDTH, DEFAULT_HEIGHT);
             center = Point.generateRandomPoint(borders);
-            size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
-                    borders.getDown() - borders.getUp()) / 6) + 10;
+            size = rand.nextInt(getMaxSize()) + getMinSize();
             color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
             fixBall(); // Ensure the ball is within borders
@@ -52,7 +52,7 @@ public class Ball {
         fixSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified size, random color, and borders. The velocity is randomly generated.
@@ -67,7 +67,7 @@ public class Ball {
         fixSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified center, size, random color, and borders. The velocity is randomly generated.
@@ -84,7 +84,7 @@ public class Ball {
         fixSize();
         this.color = color;
         this.velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        this.fixBall(); // Ensure the ball is within borders
+        fixBall(); // Ensure the ball is within borders
     }
     /**
      * Constructs a Ball with the specified center, size, color, borders, and velocity.
@@ -102,8 +102,10 @@ public class Ball {
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         color = randColor;
         velocity = v;
-        this.fixBall(); // Ensure the ball is within borders
+        //fixVelocity();
+        fixBall(); // Ensure the ball is within borders
     }
+
     /**
      * Constructs a Ball with random attributes (center, size, color, and angle) and specified borders.
      * Ensures the ball is within the borders after initialization.
@@ -112,8 +114,7 @@ public class Ball {
     public Ball(Borders borders) {
         this.borders = borders;
         center = Point.generateRandomPoint(borders);
-        size = (int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
-                borders.getDown() - borders.getUp()) / 6) + 10;
+        size = rand.nextInt(getMaxSize()) + getMinSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
         fixBall(); // Ensure the ball is within borders
@@ -230,14 +231,15 @@ public class Ball {
         fixBottom();
     }
     public void fixSize() {
-        double rangeX = borders.getRight() - borders.getLeft();
-        double rangeY = borders.getDown() - borders.getUp();
-        if (size > (Math.min(rangeY, rangeX) / 4)) {
-            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
-        } else if (size < 5) {
-            size = rand.nextInt((int) (Math.min(rangeY, rangeX) / 6)) + (int) Math.min(rangeY, rangeX) / 20;
+        if (size > (getMaxSize())) {
+            size = rand.nextInt(getMaxSize()) + getMinSize();
+        } else if (size < getMinSize()) {
+            size = rand.nextInt(getMaxSize()) + getMinSize();
         }
     }
+//    private void fixVelocity() {
+//
+//    }
     /**
      * Fixes the ball's position and size, ensuring it stays within the borders.
      */
@@ -372,24 +374,37 @@ public class Ball {
      * @return a string representation of the ball.
      */
     public String toString() {
-        return "Size = " + size + "Color = " + color.toString() + center.toString() + borders.toString();
+        return "Size = " + size + " Color = " + color.toString()
+                + "Center = " + center.toString() + "," + " Borders = " + borders.toString()
+                + "Velocity = " + velocity.toString();
     }
     /**
      * Converts the ball's size to an appropriate speed value.
      * @return the calculated speed value based on the ball's size.
      */
-    private double sizeToSpeed() {
-        if (this.size > 100) {
+    public double sizeToSpeed() {
+        if (this.size > 50) {
             return SCALING_FACTOR / 50;
         } else {
             return SCALING_FACTOR / this.size;
         }
     }
-    private int velocityToSize() {
-        if (velocity.getSpeed() > 30) {
+    public int velocityToSize() {
+        if (velocity.getMagnitude() > 30) {
             return (int) (SCALING_FACTOR / 30);
         } else {
-            return (int) (SCALING_FACTOR / velocity.getSpeed());
+            return (int) (SCALING_FACTOR / velocity.getMagnitude());
         }
     }
+    public int getMaxSize() {
+        return (int) Math.min(borders.getRight() - borders.getLeft(),
+                borders.getDown() - borders.getUp()) / 4;
+    }
+    public int getMinSize() {
+        return Math.min(((int) Math.min(borders.getRight() - borders.getLeft(),
+                borders.getDown() - borders.getUp()) / 20), 5);
+    }
+//    public Velocity getMaxVelocity() {
+//
+//    }
 }
