@@ -44,9 +44,6 @@ public class MultipleBouncingBallsAnimation {
                 }
             }
         }
-        for (Ball ball : balls) {
-            System.out.println(ball.toString());
-        }
         while (true) {
             DrawSurface d = gui.getDrawSurface();
             for (Ball ball : balls) {
