@@ -24,10 +24,10 @@ public class BouncingBallAnimation {
             dx = Double.parseDouble(args[2]);
             dy = Double.parseDouble(args[3]);
         } catch (Exception e) {
-            dx = rand.nextDouble() * (borders.getRight() - borders.getLeft()) / 4;
-            dy = rand.nextDouble() * (borders.getDown() - borders.getUp()) / 4;
+            dx = 0;
+            dy = 0;
             System.out.println("The input doesn't match the required type (int).");
-            System.out.println("Random velocity has been generated.");
+            System.out.println("Velocity 0 has been generated.");
         }
         drawAnimation(start, dx, dy);
     }

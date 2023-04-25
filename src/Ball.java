@@ -125,16 +125,17 @@ public class Ball {
         center = start;
         if (dx > 30) {
             dx = 30;
-        } else if (dx < 0 || Geometry.doubleEquals(dx, 0)) {
-            dx = 1;
         }
         if (dy > 30) {
             dy = 30;
-        } else if (dy < 0 || Geometry.doubleEquals(dy, 0)) {
-            dy = 1;
         }
         velocity = new Velocity(dx, dy);
-        size = velocityToSize();
+        if (velocity.getMagnitude() == 0) {
+            size = (int) Math.min(borders.getRight() - borders.getLeft(),
+                    borders.getDown() - borders.getUp()) / 4;
+        } else {
+            size = velocityToSize();
+        }
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
     }
     //Commands
