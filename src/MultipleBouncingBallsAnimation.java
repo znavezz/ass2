@@ -39,7 +39,7 @@ public class MultipleBouncingBallsAnimation {
                             borders.getDown() - borders.getUp()) / 6) + 10, borders));
                     balls.add(new Ball((int) rand.nextDouble(Math.min(borders.getRight() - borders.getLeft(),
                             borders.getDown() - borders.getUp()) / 6) + 10, borders));
-                    System.out.println("There want enough Balls");
+                    System.out.println("There wasn't enough Balls");
                     System.out.println("Random Balls has been generated.");
                 }
             }

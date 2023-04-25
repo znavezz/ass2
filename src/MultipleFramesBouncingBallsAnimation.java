@@ -46,14 +46,14 @@ public class MultipleFramesBouncingBallsAnimation {
             inGreyBalls.add(new Ball(greyFrame));
             inGreyBalls.add(new Ball(greyFrame));
             inGreyBalls.add(new Ball(greyFrame));
-            System.out.println("There want enough Balls");
+            System.out.println("There wasn't enough Balls");
             System.out.println("Random Balls in grey frame has been generated.");
         }
         if (inYellowBalls.size() < 3) {
             inYellowBalls.add(new Ball(yellowFrame));
             inYellowBalls.add(new Ball(yellowFrame));
             inYellowBalls.add(new Ball(yellowFrame));
-            System.out.println("There want enough Balls");
+            System.out.println("There wasn't enough Balls");
             System.out.println("Random Balls in grey frame has been generated.");
         }
         while (true) {
