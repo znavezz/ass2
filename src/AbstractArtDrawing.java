@@ -9,8 +9,8 @@ import java.awt.Color;
  * This class creates an abstract art drawing consisting of randomly generated lines and the intersections between them.
  */
 public class AbstractArtDrawing {
-    static final int WIDTH = 400;
-    static final int HEIGHT = 300;
+    public static final int WIDTH = 400;
+    public static final int HEIGHT = 300;
     /**
      * This is the main method that creates a new instance of AbstractArtDrawing
      * and calls its drawRandomLinesAndIntersection() method.
@@ -26,13 +26,11 @@ public class AbstractArtDrawing {
      * If two lines intersect, a red circle is drawn at the intersection point.
      */
     public void drawRandomLinesAndIntersection() {
-        Random rand = new Random(); // create a random-number generator
-        // Create a window with the title "Random Circles Example"
-        // which is 400 pixels wide and 300 pixels high.
+        Random rand = new Random();
         GUI gui = new GUI("Abstract Art Drawing", WIDTH, HEIGHT);
         DrawSurface d = gui.getDrawSurface();
         ArrayList<Line> lines = new ArrayList<>();
-        for (int i = 0; i < 10; ++i) {
+        for (int i = 0; i < 10; i++) {
             int x = rand.nextInt(WIDTH) + 1; // get integer in range 1-WIDTH
             int y = rand.nextInt(HEIGHT) + 1; // get integer in range 1-HEIGHT
             int z = rand.nextInt(WIDTH) + 1; // get integer in range 1-WIDTH
@@ -44,7 +42,6 @@ public class AbstractArtDrawing {
             d.setColor(Color.BLUE);
             d.fillCircle((int) Math.round(line.middle().getX()), (int) Math.round(line.middle().getY()), 3);
         }
-
         for (int i = 0; i < lines.size() - 1; i++) {
             for (int j = i + 1; j < lines.size(); j++) {
                 if (lines.get(i).isIntersecting(lines.get(j))) {
@@ -57,4 +54,6 @@ public class AbstractArtDrawing {
         }
         gui.show(d);
     }
+
+
 }

@@ -73,7 +73,5 @@ public class MultipleFramesBouncingBallsAnimation {
             gui.show(d);
             sleeper.sleepFor(30);
         }
-
-
     }
 }

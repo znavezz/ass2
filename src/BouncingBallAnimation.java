@@ -11,8 +11,8 @@ import java.util.Random;
 
 public class BouncingBallAnimation {
     private static Random rand = new Random();
-    public static final int WIDTH = 600;
-    public static final int HEIGHT = 600;
+    public static final int WIDTH = 200;
+    public static final int HEIGHT = 200;
     private static Borders borders = new Borders(WIDTH, HEIGHT);
     /**
      * The main method runs the BouncingBallAnimation.
