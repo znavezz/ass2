@@ -1,5 +1,8 @@
 import biuoop.DrawSurface;
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * @author Nave Zehoray < znavez@gmail.com >
  * @version 1.3
@@ -20,8 +23,12 @@ public class Line {
      * @param y2 the y-coordinate of the end point
      */
     public Line(double x1, double y1, double x2, double y2) {
-        this.start = new Point(x1, y1);
-        this.end = new Point(x2, y2);
+        start = new Point(x1, y1);
+        end = new Point(x2, y2);
+    }
+    public Line(Point start, Point end) {
+        this.start = start;
+        this.end = end;
     }
     /**
      * Constructs a new Line object with the specified coordinates for the start and end points and color.
@@ -196,6 +203,17 @@ public class Line {
             }
             x = (other.intersectWithYAxis() - this.intersectWithYAxis()) / (this.getSlope() - other.getSlope());
             return new Point(x, this.getYOfX(x));
+        }
+    }
+        // If this line does not intersect with the rectangle, return null.
+        // Otherwise, return the closest intersection point to the
+        // start of the line.
+    public Point closestIntersectionToStartOfLine(Rectangle rec) {
+        ArrayList<Point> intersectionPoints = (ArrayList<Point>) rec.intersectionPoints(this);
+        if (intersectionPoints.isEmpty()) {
+            return null;
+        } else {
+            return intersectionPoints.get(0);
         }
     }
     /**

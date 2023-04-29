@@ -54,6 +54,28 @@ public class AbstractArtDrawing {
         }
         gui.show(d);
     }
+    public static void drawIntersectionPoints(ArrayList<Line> lines, DrawSurface d) {
+        int k = 0;
+        while (k < lines.size()) {
+            d.setColor(Color.BLACK);
+            d.drawLine((int) Math.round(lines.get(k).start().getX()), (int) Math.round(lines.get(k).start().getY()),
+                    (int) Math.round(lines.get(k).end().getX()), (int) Math.round(lines.get(k).end().getY()));
+            d.setColor(Color.BLUE);
+            d.fillCircle((int) Math.round(lines.get(k).middle().getX()),
+                    (int) Math.round(lines.get(k).middle().getY()), 3);
+            k++;
+        }
+        for (int i = 0; i < lines.size() - 1; i++) {
+            for (int j = i + 1; j < lines.size(); j++) {
+                if (lines.get(i).isIntersecting(lines.get(j))) {
+                    Point intersect = lines.get(i).intersectionWith(lines.get(j));
+                    System.out.println(intersect.toString());
+                    d.setColor(Color.RED);
+                    d.fillCircle((int) Math.round(intersect.getX()), (int) Math.round(intersect.getY()), 3);
+                }
+            }
+        }
+    }
 
 
 }

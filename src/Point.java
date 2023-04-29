@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+
 /**
  * Represents a point with x and y coordinates.
  */
@@ -114,5 +117,43 @@ public class Point {
     public static Point generateRandomPoint(Borders borders) {
         return new Point(Geometry.RAND.nextDouble(borders.getRight()) + borders.getLeft(),
                 Geometry.RAND.nextDouble(borders.getDown()) + borders.getUp());
+    }
+    public void sortByDistance(ArrayList<Point> points, int l, int r) {
+        if (l < r) {
+            //Find the middle point
+            int m = l + (r - l) / 2;
+            sortByDistance(points, l, m);
+            sortByDistance(points, m + 1, r);
+            mergeByDistance(points, l, m, r);
+        }
+    }
+    public void mergeByDistance(ArrayList<Point> points, int l, int m, int r) {
+        int sizeOfLeftSubArray = m - l + 1;
+        int sizeOfRightSubArray = r - m;
+        ArrayList<Point> leftSubArray = new ArrayList<>(points.subList(l, m + 1));
+        ArrayList<Point> rightSubArray = new ArrayList<>(points.subList(m + 1, r + 1));
+        int i = 0;
+        int j = 0;
+        int k = l;
+        while (i < sizeOfLeftSubArray && j < sizeOfRightSubArray) {
+            if (distance(leftSubArray.get(i)) < distance(rightSubArray.get(j))) {
+                points.set(k, leftSubArray.get(i));
+                i++;
+            } else {
+                points.set(k, rightSubArray.get(j));
+                j++;
+            }
+            k++;
+        }
+        while (i < sizeOfLeftSubArray) {
+            points.set(k, leftSubArray.get(i));
+            i++;
+            k++;
+        }
+        while (j < sizeOfRightSubArray) {
+            points.set(k, rightSubArray.get(j));
+            j++;
+            k++;
+        }
     }
 }
