@@ -5,8 +5,8 @@
  */
 public class Borders {
     //Fields
-    private double left = 0;
-    private double up = 0;
+    private double left;
+    private double up;
     private double right;
     private double down;
     //Constructors
@@ -14,6 +14,8 @@ public class Borders {
      * Initializes the borders with default values.
      */
     public Borders() {
+        left = 0;
+        up = 0;
         right = 800;
         down = 600;
     }

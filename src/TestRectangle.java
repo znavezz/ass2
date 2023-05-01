@@ -5,7 +5,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Test {
+public class TestRectangle {
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
     public static void main(String[] args) {
@@ -14,16 +14,16 @@ public class Test {
         DrawSurface d = gui.getDrawSurface();
         ArrayList<Line> recBorder = new ArrayList<>();
         ArrayList<Line> lines = new ArrayList<>();
-        Rectangle rec1 = new Rectangle(new Point(50, 50), 200, 200);
-        Rectangle rec2 = new Rectangle(new Point(200, 200), 200, 200);
-        recBorder.add(rec1.getLeftSide());
-        recBorder.add(rec1.getUpSide());
-        recBorder.add(rec1.getRightSide());
-        recBorder.add(rec1.getDownSide());
-        recBorder.add(rec2.getLeftSide());
-        recBorder.add(rec2.getUpSide());
-        recBorder.add(rec2.getRightSide());
-        recBorder.add(rec2.getDownSide());
+        ArrayList<Rectangle> rectangles = new ArrayList<>();
+        rectangles.add(new Rectangle(new Point(50, 50), 200, 200));
+        rectangles.add(new Rectangle(new Point(200, 200), 200, 200));
+        rectangles.add(new Rectangle(new Point(-100, 350), 300, 200));
+        for (Rectangle rectangle : rectangles) {
+            recBorder.add(rectangle.getLeftSide());
+            recBorder.add(rectangle.getUpSide());
+            recBorder.add(rectangle.getRightSide());
+            recBorder.add(rectangle.getDownSide());
+        }
         for (Line border : recBorder) {
             d.setColor(Color.BLACK);
             d.drawLine((int) Math.round(border.start().getX()), (int) Math.round(border.start().getY()),
@@ -52,17 +52,15 @@ public class Test {
             d.setColor(Color.BLUE);
             d.fillCircle((int) Math.round(line.middle().getX()),
                     (int) Math.round(line.middle().getY()), 3);
-            System.out.println("---------Rectangle 1----------");
-            for (Point point : rec1.intersectionPoints(line)) {
-                System.out.println("distance: " + point.distance(line.start()));
-                d.setColor(Color.RED);
-                d.fillCircle((int) Math.round(point.getX()), (int) Math.round(point.getY()), 3);
-            }
-            System.out.println("---------Rectangle 2----------");
-            for (Point point : rec2.intersectionPoints(line)) {
-                System.out.println("distance: " + point.distance(line.start()));
-                d.setColor(Color.RED);
-                d.fillCircle((int) Math.round(point.getX()), (int) Math.round(point.getY()), 3);
+            int i = 0;
+            while (i < rectangles.size()) {
+                System.out.println("---------Rectangle " + (i + 1) + "----------");
+                for (Point point : rectangles.get(i).intersectionPoints(line)) {
+                    System.out.println("distance: " + point.distance(line.start()));
+                    d.setColor(Color.RED);
+                    d.fillCircle((int) Math.round(point.getX()), (int) Math.round(point.getY()), 3);
+                }
+                i++;
             }
         }
         System.out.println("The closest intersection point to the r");

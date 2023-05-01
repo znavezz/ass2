@@ -10,9 +10,9 @@ import java.awt.Color;
  * @version 1.6
  * @since 2023-04-12
  */
-public class Ball {
+public class Ball implements Sprite{
     //Fields
-    private static final int SCALING_FACTOR = 300;
+    private static final int SCALING_FACTOR = 80;
     private static final double DEFAULT_WIDTH = 800;
     private static final double DEFAULT_HEIGHT = 600;
     private final Random rand = new Random();
@@ -21,6 +21,7 @@ public class Ball {
     private int size;
     private Velocity velocity;
     private Color color;
+    private GameEnvironment gameEnvironment;
 
 
     //constructors
@@ -35,6 +36,13 @@ public class Ball {
             color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
             fixBall(); // Ensure the ball is within borders
+    }
+    public Ball(GameEnvironment gameEnvironment, Point center) {
+        this.center = center;
+        this.gameEnvironment = gameEnvironment;
+        size = 6;
+        color = Color.BLACK;
+        velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
     }
 
     /**
@@ -182,6 +190,11 @@ public class Ball {
         surface.setColor(this.color);
         surface.fillCircle((int) Math.round(this.center.getX()), (int) Math.round(this.center.getY()), this.size);
     }
+
+    public void timePassed() {
+
+    }
+
     /**
      * Sets the velocity of the ball using dx and dy values.
      * @param dx the change in x-axis position.
@@ -263,19 +276,34 @@ public class Ball {
      * If a collision occurs, the ball's position is adjusted, and its velocity is updated accordingly.
      */
     public void moveOneStep() {
-
-        Ball check = new Ball(this.center, this.size, this.velocity,
-                this.borders);
-        // Calculate the ball's new position
-        check.getVelocity().applyToPoint(check.center);
-        // Check for horizontal collisions (left and right borders)
-            if (check.isOutOfFrame()) {
-                check.fixBall();
-                // Reverse the horizontal velocity (dx) and update the new position accordingly
+        Point endOfTrajectory = new Point(center);
+        velocity.applyToPoint(endOfTrajectory);
+        Line trajectory = new Line(center, endOfTrajectory);
+        CollisionInfo closestCollision = gameEnvironment.getClosestCollision(trajectory);
+        if (closestCollision == null) {
+            velocity.applyToPoint(center);
+        } else {
+            Line downSide = closestCollision.collisionObject().getCollisionRectangle().getDownSide();
+            Line rightSide = closestCollision.collisionObject().getCollisionRectangle().getRightSide();
+            Line leftSide = closestCollision.collisionObject().getCollisionRectangle().getLeftSide();
+            Line upSide = closestCollision.collisionObject().getCollisionRectangle().getUpSide();
+            Point collision = closestCollision.collisionPoint();
+            if (collision.isOnLine(downSide)) {
+                center.setY(closestCollision.collisionPoint().getY() + 1);
             }
-            this.center = check.getCenter();
-        // Check if the ball moves over the bounds. If so, adjust the position and speed.
+            if (collision.isOnLine(rightSide)) {
+                center.setX(closestCollision.collisionPoint().getX() + 1);
+            }
+            if (collision.isOnLine(upSide)) {
+                center.setY(closestCollision.collisionPoint().getY() - 1);
+            }
+            if (collision.isOnLine(leftSide)) {
+                center.setX(closestCollision.collisionPoint().getX() - 1);
+            }
+
+            velocity = closestCollision.collisionObject().hit(closestCollision.collisionPoint(), velocity);
         }
+    }
     //Queries
     /**
      * @return the x-coordinate of the ball's center.

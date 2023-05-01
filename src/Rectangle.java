@@ -16,10 +16,10 @@ public class Rectangle {
         this.upperLeft = upperLeft;
         this.width = width;
         this.height = height;
-        leftSide = new Line(upperLeft, getDownleft());
+        leftSide = new Line(upperLeft, getDownLeft());
         upSide = new Line(upperLeft, getUpperRight());
         rightSide = new Line(getUpperRight(), getDownRight());
-        downSide = new Line(getDownRight(), getDownleft());
+        downSide = new Line(getDownRight(), getDownLeft());
     }
 
     // Return a (possibly empty) List of intersection points
@@ -63,7 +63,7 @@ public class Rectangle {
     public Point getDownRight() {
         return new Point(upperLeft.getX() + width, upperLeft.getY() + height);
     }
-    public Point getDownleft() {
+    public Point getDownLeft() {
         return new Point(upperLeft.getX(), upperLeft.getY() + height);
     }
     public Line getLeftSide() {
