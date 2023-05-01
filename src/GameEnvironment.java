@@ -4,13 +4,16 @@ import java.util.ArrayList;
 public class GameEnvironment {
     public static final int WIDTH = 850;
     public static final int HEIGHT = 600;
-    public static final int BORDERS_WIDTH = 10;
+    public static final int DEFAULT_BORDERS_WIDTH = 10;
 
     private ArrayList<Collidable> collidables;
     private Block leftBorder;
     private Block upperBorder;
     private Block rightBorder;
     private Block downBorder;
+    private int borderWidth;
+    private int width;
+    private int height;
     public GameEnvironment() {
         collidables = new ArrayList<Collidable>();
         leftBorder = new Block(new Rectangle(new Point(0, 0), BORDERS_WIDTH, HEIGHT), Color.BLACK);
@@ -77,5 +80,29 @@ public class GameEnvironment {
             }
             return closestCollision;
         }
+    }
+
+    public int getBorderWidth() {
+        return borderWidth;
+    }
+
+    public void setBorderWidth(int borderWidth) {
+        this.borderWidth = borderWidth;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
     }
 }

@@ -12,17 +12,14 @@ import java.awt.Color;
  */
 public class Ball implements Sprite{
     //Fields
+    private GameEnvironment gameEnvironment;
     private static final int SCALING_FACTOR = 80;
-    private static final double DEFAULT_WIDTH = 800;
-    private static final double DEFAULT_HEIGHT = 600;
     private final Random rand = new Random();
     private Borders borders;
     private Point center;
     private int size;
     private Velocity velocity;
     private Color color;
-    private GameEnvironment gameEnvironment;
-
 
     //constructors
     /**
@@ -30,12 +27,11 @@ public class Ball implements Sprite{
      * Ensures the ball is within the borders after initialization.
      */
     public Ball() {
-            borders = new Borders(DEFAULT_WIDTH, DEFAULT_HEIGHT);
             center = Point.generateRandomPoint(borders);
             size = rand.nextInt(getMaxSize()) + getMinSize();
             color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
-            fixBall(); // Ensure the ball is within borders
+            //fixBall(); // Ensure the ball is within borders
     }
     public Ball(GameEnvironment gameEnvironment, Point center) {
         this.center = center;
@@ -44,16 +40,13 @@ public class Ball implements Sprite{
         color = Color.BLACK;
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
     }
-
     /**
      * Constructs a Ball with the specified center, size, random color, and borders. The velocity is randomly generated.
      * Ensures the ball is within the borders after initialization.
      * @param center the center Point of the ball.
      * @param r the radius of the ball.
-     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int r, Borders borders) {
-        this.borders = borders;
+    public Ball(Point center, int r) {
         this.center = center;
         size = r;
         fixSize();
@@ -65,10 +58,8 @@ public class Ball implements Sprite{
      * Constructs a Ball with the specified size, random color, and borders. The velocity is randomly generated.
      * Ensures the ball is within the borders after initialization.
      * @param r the radius of the ball.
-     * @param borders the borders of the ball.
      */
-    public Ball(int r, Borders borders) {
-        this.borders = borders;
+    public Ball(int r) {
         center = Point.generateRandomPoint(borders);
         size = r;
         fixSize();
@@ -82,10 +73,8 @@ public class Ball implements Sprite{
      * @param center the center Point of the ball.
      * @param size the radius of the ball.
      * @param color the color of the ball.
-     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int size, Color color, Borders borders) {
-        this.borders = borders;
+    public Ball(Point center, int size, Color color) {
         this.center = center;
         this.size = size;
         fixSize();
@@ -99,10 +88,8 @@ public class Ball implements Sprite{
      * @param center the center Point of the ball.
      * @param r the radius of the ball.
      * @param v the velocity of the ball.
-     * @param borders the borders of the ball.
      */
-    public Ball(Point center, int r, Velocity v, Borders borders) {
-        this.borders = borders;
+    public Ball(Point center, int r, Velocity v) {
         this.center = center;
         size = r;
         fixSize();
@@ -112,29 +99,13 @@ public class Ball implements Sprite{
         //fixVelocity();
         fixBall(); // Ensure the ball is within borders
     }
-
-    /**
-     * Constructs a Ball with random attributes (center, size, color, and angle) and specified borders.
-     * Ensures the ball is within the borders after initialization.
-     * @param borders the borders of the ball.
-     */
-    public Ball(Borders borders) {
-        this.borders = borders;
-        center = Point.generateRandomPoint(borders);
-        size = rand.nextInt(getMaxSize()) + getMinSize();
-        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
-        fixBall(); // Ensure the ball is within borders
-    }
     /**
      * Constructs a Ball object with a specified starting point, borders, and velocity components.
      * @param start the starting point of the ball's center.
-     * @param borders the borders within which the ball should stay.
      * @param dx the horizontal component of the ball's velocity.
      * @param dy the vertical component of the ball's velocity.
      */
-    public Ball(Point start, Borders borders, double dx, double dy) {
-        this.borders = borders;
+    public Ball(Point start, double dx, double dy) {
         center = start;
         if (dx > 30) {
             dx = 30;
@@ -144,8 +115,10 @@ public class Ball implements Sprite{
         }
         velocity = new Velocity(dx, dy);
         if (velocity.getMagnitude() == 0) {
-            size = (int) Math.min(borders.getRight() - borders.getLeft(),
-                    borders.getDown() - borders.getUp()) / 4;
+            size = (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
+                    - borders.getLeft().getRectangle().getRightSide().start().getX(),
+                    borders.getDown().getRectangle().getUpSide().start().getY()
+                            - borders.getUp().getRectangle().getDownSide().start().getY()) / 4;
         } else {
             size = velocityToSize();
         }
@@ -192,7 +165,7 @@ public class Ball implements Sprite{
     }
 
     public void timePassed() {
-
+        moveOneStep();
     }
 
     /**
@@ -207,48 +180,48 @@ public class Ball implements Sprite{
     /**
      * Adjusts the ball's position if it is out of the left border and reverses its horizontal velocity.
      */
-    public void fixLeft() {
-        if (isOutOfLeft()) {
-            this.center.setX(this.size + this.borders.getLeft());
-            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
-        }
-    }
-    /**
-     * Adjusts the ball's position if it is out of the right border and reverses its horizontal velocity.
-     */
-    public void fixRight() {
-        if (isOutOfRight()) {
-            this.center.setX(this.borders.getRight() - this.size);
-            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
-        }
-    }
-    /**
-     * Adjusts the ball's position if it is out of the top border and reverses its vertical velocity.
-     */
-    public void fixTop() {
-        if (isOutOfTop()) {
-            this.center.setY(this.size + this.borders.getUp());
-            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
-        }
-    }
-    /**
-     * Adjusts the ball's position if it is out of the bottom border and reverses its vertical velocity.
-     */
-    public void fixBottom() {
-        if (isOutOfBottom()) {
-            this.center.setY(this.borders.getDown() - this.size);
-            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
-        }
-    }
-    /**
-     * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
-     */
-    public void fixPosition() {
-        fixLeft();
-        fixTop();
-        fixRight();
-        fixBottom();
-    }
+//    public void fixLeft() {
+//        if (isOutOfLeft()) {
+//            this.center.setX(this.size + this.borders.getLeft());
+//            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
+//        }
+//    }
+//    /**
+//     * Adjusts the ball's position if it is out of the right border and reverses its horizontal velocity.
+//     */
+//    public void fixRight() {
+//        if (isOutOfRight()) {
+//            this.center.setX(this.borders.getRight() - this.size);
+//            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
+//        }
+//    }
+//    /**
+//     * Adjusts the ball's position if it is out of the top border and reverses its vertical velocity.
+//     */
+//    public void fixTop() {
+//        if (isOutOfTop()) {
+//            this.center.setY(this.size + this.borders.getUp());
+//            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
+//        }
+//    }
+//    /**
+//     * Adjusts the ball's position if it is out of the bottom border and reverses its vertical velocity.
+//     */
+//    public void fixBottom() {
+//        if (isOutOfBottom()) {
+//            this.center.setY(this.borders.getDown() - this.size);
+//            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
+//        }
+//    }
+//    /**
+//     * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
+//     */
+//    public void fixPosition() {
+//        fixLeft();
+//        fixTop();
+//        fixRight();
+//        fixBottom();
+//    }
     /**
      * Ensures that the ball's size is within the minimum and maximum allowed size limits.
      * If the size is outside the limits, it randomly assigns a new size within the allowed range.
@@ -260,17 +233,14 @@ public class Ball implements Sprite{
             size = rand.nextInt(getMaxSize()) + getMinSize();
         }
     }
-//    private void fixVelocity() {
-//
+//    /**
+//     * Fixes the ball's position and size, ensuring it stays within the borders.
+//     */
+//    public void fixBall() {
+//        // edges
+//        fixSize();
+//        fixPosition();
 //    }
-    /**
-     * Fixes the ball's position and size, ensuring it stays within the borders.
-     */
-    public void fixBall() {
-        // edges
-        fixSize();
-        fixPosition();
-    }
     /**
      * Updates the ball's position based on its velocity and checks for collisions with borders.
      * If a collision occurs, the ball's position is adjusted, and its velocity is updated accordingly.
@@ -341,18 +311,6 @@ public class Ball implements Sprite{
      */
     public Velocity getVelocity() {
         return this.velocity;
-    }
-    /**
-     * @return the default width of the frame.
-     */
-    public static double getDefaultWidth() {
-        return DEFAULT_WIDTH;
-    }
-    /**
-     * @return the default height of the frame.
-     */
-    public static double getDefaultHeight() {
-        return DEFAULT_HEIGHT;
     }
     /**
      * Checks if the ball is out of the top border.
@@ -444,8 +402,10 @@ public class Ball implements Sprite{
      * @return the maximum size
      */
     public int getMaxSize() {
-        return (int) Math.min(borders.getRight() - borders.getLeft(),
-                borders.getDown() - borders.getUp()) / 4;
+        return (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
+                - borders.getLeft().getRectangle().getRightSide().start().getX(),
+                borders.getDown().getRectangle().getUpSide().start().getY()
+                - borders.getUp().getRectangle().getDownSide().start().getY()) / 4;
     }
     /**
      * Calculates the minimum allowed size for the ball based on the dimensions of the borders.
@@ -453,8 +413,10 @@ public class Ball implements Sprite{
      * @return the minimum size allowed
      */
     public int getMinSize() {
-        return Math.min(((int) Math.min(borders.getRight() - borders.getLeft(),
-                borders.getDown() - borders.getUp()) / 20), 5);
+        return Math.min(((int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
+                - borders.getLeft().getRectangle().getRightSide().start().getX(),
+                borders.getDown().getRectangle().getUpSide().start().getY()
+                        - borders.getUp().getRectangle().getDownSide().start().getY()) / 20), 5);
     }
 //    public Velocity getMaxVelocity() {
 //

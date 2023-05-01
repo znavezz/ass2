@@ -28,7 +28,7 @@ public class TestGameEnvironment {
             ball.moveOneStep();
             ball.drawOn(d);
             gui.show(d);
-            sleeper.sleepFor(15);
+            sleeper.sleepFor(60);
         }
     }
 }
