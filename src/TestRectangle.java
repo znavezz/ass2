@@ -20,9 +20,9 @@ public class TestRectangle {
         rectangles.add(new Rectangle(new Point(-100, 350), 300, 200));
         for (Rectangle rectangle : rectangles) {
             recBorder.add(rectangle.getLeftSide());
-            recBorder.add(rectangle.getUpSide());
+            recBorder.add(rectangle.getTopSide());
             recBorder.add(rectangle.getRightSide());
-            recBorder.add(rectangle.getDownSide());
+            recBorder.add(rectangle.getBottomSide());
         }
         for (Line border : recBorder) {
             d.setColor(Color.BLACK);
@@ -38,10 +38,10 @@ public class TestRectangle {
         lines.add(line3);
         lines.add(line4);
         for (int i = 0; i < 25; i++) {
-            int x = rand.nextInt(WIDTH) + 1; // get integer in range 1-WIDTH
-            int y = rand.nextInt(HEIGHT) + 1; // get integer in range 1-HEIGHT
-            int z = rand.nextInt(WIDTH) + 1; // get integer in range 1-WIDTH
-            int w = rand.nextInt(HEIGHT) + 1; // get integer in range 1-HEIGHT
+            int x = rand.nextInt(WIDTH) + 1; // get integer in range 1-DEFAULT_WIDTH
+            int y = rand.nextInt(HEIGHT) + 1; // get integer in range 1-DEFAULT_HEIGHT
+            int z = rand.nextInt(WIDTH) + 1; // get integer in range 1-DEFAULT_WIDTH
+            int w = rand.nextInt(HEIGHT) + 1; // get integer in range 1-DEFAULT_HEIGHT
             Line line = new Line(x, y, z, w);
             lines.add(line);
         }

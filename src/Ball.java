@@ -10,10 +10,10 @@ import java.awt.Color;
  * @version 1.6
  * @since 2023-04-12
  */
-public class Ball implements Sprite{
+public class Ball implements Sprite {
     //Fields
     private GameEnvironment gameEnvironment;
-    private static final int SCALING_FACTOR = 80;
+    private static final int SCALING_FACTOR = 60;
     private final Random rand = new Random();
     private Borders borders;
     private Point center;
@@ -27,17 +27,17 @@ public class Ball implements Sprite{
      * Ensures the ball is within the borders after initialization.
      */
     public Ball() {
-            center = Point.generateRandomPoint(borders);
+            center = borders.generateRandomPoint();
             size = rand.nextInt(getMaxSize()) + getMinSize();
             color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
             velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
-            //fixBall(); // Ensure the ball is within borders
+            fixBall(); // Ensure the ball is within borders
     }
     public Ball(GameEnvironment gameEnvironment, Point center) {
         this.center = center;
         this.gameEnvironment = gameEnvironment;
         size = 6;
-        color = Color.BLACK;
+        color = new Color(Geometry.RAND.nextInt(255), Geometry.RAND.nextInt(255), Geometry.RAND.nextInt(255));
         velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
     }
     /**
@@ -60,7 +60,7 @@ public class Ball implements Sprite{
      * @param r the radius of the ball.
      */
     public Ball(int r) {
-        center = Point.generateRandomPoint(borders);
+        center = borders.generateRandomPoint();
         size = r;
         fixSize();
         color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
@@ -96,7 +96,6 @@ public class Ball implements Sprite{
         Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
         color = randColor;
         velocity = v;
-        //fixVelocity();
         fixBall(); // Ensure the ball is within borders
     }
     /**
@@ -117,8 +116,8 @@ public class Ball implements Sprite{
         if (velocity.getMagnitude() == 0) {
             size = (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
                     - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                    borders.getDown().getRectangle().getUpSide().start().getY()
-                            - borders.getUp().getRectangle().getDownSide().start().getY()) / 4;
+                    borders.getBottom().getRectangle().getTopSide().start().getY()
+                            - borders.getTop().getRectangle().getBottomSide().start().getY()) / 4;
         } else {
             size = velocityToSize();
         }
@@ -160,6 +159,8 @@ public class Ball implements Sprite{
      * @param surface the DrawSurface on which the ball should be drawn.
      */
     public void drawOn(DrawSurface surface) {
+        surface.setColor(Color.BLACK);
+        surface.drawCircle((int) Math.round(this.center.getX()), (int) Math.round(this.center.getY()), this.size);
         surface.setColor(this.color);
         surface.fillCircle((int) Math.round(this.center.getX()), (int) Math.round(this.center.getY()), this.size);
     }
@@ -177,51 +178,39 @@ public class Ball implements Sprite{
         this.velocity.setDx(dx);
         this.velocity.setDy(dy);
     }
+
+    public void putInLeftBorder() {
+        if (isOutOfLeft()) {
+            this.center.setX(this.size + this.borders.getLeft().getRectangle().getRightSide().start().getX());
+        }
+    }
+
+    public void putInRightBorder() {
+        if (isOutOfRight()) {
+            this.center.setX(this.borders.getRight().getRectangle().getLeftSide().start().getX() - this.size);
+        }
+    }
+
+    public void putInTopBorder() {
+        if (isOutOfTop()) {
+            this.center.setY(this.size + this.borders.getTop().getRectangle().getBottomSide().start().getY());
+        }
+    }
+
+    public void putInBottomBorder() {
+        if (isOutOfBottom()) {
+            this.center.setY(this.borders.getBottom().getRectangle().getTopSide().start().getY() - this.size);
+        }
+    }
     /**
-     * Adjusts the ball's position if it is out of the left border and reverses its horizontal velocity.
+     * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
      */
-//    public void fixLeft() {
-//        if (isOutOfLeft()) {
-//            this.center.setX(this.size + this.borders.getLeft());
-//            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
-//        }
-//    }
-//    /**
-//     * Adjusts the ball's position if it is out of the right border and reverses its horizontal velocity.
-//     */
-//    public void fixRight() {
-//        if (isOutOfRight()) {
-//            this.center.setX(this.borders.getRight() - this.size);
-//            this.setVelocity(-this.getVelocity().getDx(), this.getVelocity().getDy());
-//        }
-//    }
-//    /**
-//     * Adjusts the ball's position if it is out of the top border and reverses its vertical velocity.
-//     */
-//    public void fixTop() {
-//        if (isOutOfTop()) {
-//            this.center.setY(this.size + this.borders.getUp());
-//            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
-//        }
-//    }
-//    /**
-//     * Adjusts the ball's position if it is out of the bottom border and reverses its vertical velocity.
-//     */
-//    public void fixBottom() {
-//        if (isOutOfBottom()) {
-//            this.center.setY(this.borders.getDown() - this.size);
-//            this.setVelocity(this.getVelocity().getDx(), -this.getVelocity().getDy());
-//        }
-//    }
-//    /**
-//     * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
-//     */
-//    public void fixPosition() {
-//        fixLeft();
-//        fixTop();
-//        fixRight();
-//        fixBottom();
-//    }
+    public void fixPosition() {
+        putInLeftBorder();
+        putInTopBorder();
+        putInRightBorder();
+        putInBottomBorder();
+    }
     /**
      * Ensures that the ball's size is within the minimum and maximum allowed size limits.
      * If the size is outside the limits, it randomly assigns a new size within the allowed range.
@@ -233,17 +222,17 @@ public class Ball implements Sprite{
             size = rand.nextInt(getMaxSize()) + getMinSize();
         }
     }
-//    /**
-//     * Fixes the ball's position and size, ensuring it stays within the borders.
-//     */
-//    public void fixBall() {
-//        // edges
-//        fixSize();
-//        fixPosition();
-//    }
+    /**
+     * Fixes the ball's position and size, ensuring it stays within the borders.
+     */
+    public void fixBall() {
+        // edges
+        fixSize();
+        fixPosition();
+    }
     /**
      * Updates the ball's position based on its velocity and checks for collisions with borders.
-     * If a collision occurs, the ball's position is adjusted, and its velocity is updated accordingly.
+     * If a collision occurs, the ball's position is adjusted, and its velocity is topdated accordingly.
      */
     public void moveOneStep() {
         Point endOfTrajectory = new Point(center);
@@ -253,26 +242,30 @@ public class Ball implements Sprite{
         if (closestCollision == null) {
             velocity.applyToPoint(center);
         } else {
-            Line downSide = closestCollision.collisionObject().getCollisionRectangle().getDownSide();
+            Line bottomSide = closestCollision.collisionObject().getCollisionRectangle().getBottomSide();
             Line rightSide = closestCollision.collisionObject().getCollisionRectangle().getRightSide();
             Line leftSide = closestCollision.collisionObject().getCollisionRectangle().getLeftSide();
-            Line upSide = closestCollision.collisionObject().getCollisionRectangle().getUpSide();
+            Line topSide = closestCollision.collisionObject().getCollisionRectangle().getTopSide();
             Point collision = closestCollision.collisionPoint();
-            if (collision.isOnLine(downSide)) {
-                center.setY(closestCollision.collisionPoint().getY() + 1);
+            if (collision.isOnLine(bottomSide)) {
+               center.setY(1 + (bottomSide.start().getY()));
+               // center.setX(collision.getX() + (1 / Math.tan(Math.toRadians(velocity.getAngle()))));
             }
             if (collision.isOnLine(rightSide)) {
-                center.setX(closestCollision.collisionPoint().getX() + 1);
+                center.setX(rightSide.start().getX() + 1);
             }
-            if (collision.isOnLine(upSide)) {
-                center.setY(closestCollision.collisionPoint().getY() - 1);
+            if (collision.isOnLine(topSide)) {
+                center.setY(topSide.start().getY() - 1);
             }
             if (collision.isOnLine(leftSide)) {
-                center.setX(closestCollision.collisionPoint().getX() - 1);
+                center.setX(leftSide.start().getX() - 1);
             }
-
             velocity = closestCollision.collisionObject().hit(closestCollision.collisionPoint(), velocity);
         }
+    }
+    public void addToGame(Game g) {
+        g.addSprite(this);
+        g.getEnvironment().getPaddle().addBall(this);
     }
     //Queries
     /**
@@ -317,21 +310,21 @@ public class Ball implements Sprite{
      * @return true if the ball is out of the top border, false otherwise.
      */
     public boolean isOutOfTop() {
-        return (center.getY() - borders.getUp() < size);
+        return (center.getY() - borders.getTop().getRectangle().getBottomSide().start().getY() < size);
     }
     /**
      * Checks if the ball is out of the bottom border.
      * @return true if the ball is out of the bottom border, false otherwise.
      */
     public boolean isOutOfBottom() {
-        return (center.getY() + size > borders.getDown());
+        return (center.getY() + size > borders.getBottom().getRectangle().getTopSide().start().getY());
     }
     /**
      * Checks if the ball is out of the right border.
      * @return true if the ball is out of the right border, false otherwise.
      */
     public boolean isOutOfRight() {
-        return (center.getX() + size > borders.getRight());
+        return (center.getX() + size > borders.getRight().getRectangle().getLeftSide().start().getX());
     }
 
     /**
@@ -339,7 +332,7 @@ public class Ball implements Sprite{
      * @return true if the ball is out of the left border, false otherwise.
      */
     public boolean isOutOfLeft() {
-        return (center.getX() - borders.getLeft() < size);
+        return (center.getX() - borders.getLeft().getRectangle().getRightSide().start().getX() < size);
     }
     /**
      * Checks if the ball is out of the width borders (left or right).
@@ -369,9 +362,8 @@ public class Ball implements Sprite{
      * @return a string representation of the ball.
      */
     public String toString() {
-        return "Size = " + size + " Color = " + color.toString()
-                + "Center = " + center.toString() + "," + " Borders = " + borders.toString()
-                + "Velocity = " + velocity.toString();
+        return "Ball: " + "Size = " + size + ".   Color = " + color.toString()
+                + ".    Center = " + center.toString() + ".     Velocity = " + velocity.toString();
     }
     /**
      * Converts the ball's size to an appropriate speed value.
@@ -404,8 +396,8 @@ public class Ball implements Sprite{
     public int getMaxSize() {
         return (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
                 - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                borders.getDown().getRectangle().getUpSide().start().getY()
-                - borders.getUp().getRectangle().getDownSide().start().getY()) / 4;
+                borders.getBottom().getRectangle().getTopSide().start().getY()
+                - borders.getTop().getRectangle().getBottomSide().start().getY()) / 4;
     }
     /**
      * Calculates the minimum allowed size for the ball based on the dimensions of the borders.
@@ -415,10 +407,7 @@ public class Ball implements Sprite{
     public int getMinSize() {
         return Math.min(((int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
                 - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                borders.getDown().getRectangle().getUpSide().start().getY()
-                        - borders.getUp().getRectangle().getDownSide().start().getY()) / 20), 5);
+                borders.getBottom().getRectangle().getTopSide().start().getY()
+                        - borders.getTop().getRectangle().getBottomSide().start().getY()) / 20), 5);
     }
-//    public Velocity getMaxVelocity() {
-//
-//    }
 }

@@ -72,7 +72,7 @@ public class Velocity {
      * @return the angle of the velocity in radians.
      */
     public double getAngle() {
-        return Math.atan2(dy, dx);
+        return Math.toDegrees(Math.atan2(dy, dx));
     }
     /**
      * Returns the magnitude of the velocity.

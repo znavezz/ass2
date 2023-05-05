@@ -1,25 +1,35 @@
-import java.awt.*;
+import java.awt.Color;
 
 /**
- * Represents a rectangular area with left, up, right, and down borders.
+ * Represents a rectangular area with left, top, right, and bottom borders.
  * This class provides methods for getting and setting the borders, as well
  * as generating random points within the borders.
  */
 public class Borders {
     //Fields
     private Block left;
-    private Block up;
+    private Block top;
     private Block right;
-    private Block down;
+    private Block bottom;
     //Constructors
-    /**
-     * Initializes the borders with default values.
-     */
+
     public Borders(GameEnvironment g) {
-        left = new Block(new Rectangle(new Point(0, 0), g.getBorderWidth(), g.getHeight()), Color.BLACK);
-        up = new Block(new Rectangle(new Point(0, 0), g.getWidth(), g.getBorderWidth()), Color.BLACK);
-        right = new Block(new Rectangle(new Point(g.getWidth() - g.getBorderWidth(), 0), g.getBorderWidth(), g.getHeight()), Color.BLACK);
-        down = new Block(new Rectangle(new Point(0, g.getHeight() - g.getBorderWidth()), g.getWidth(), g.getBorderWidth()), Color.BLACK);
+        left = new Block(new Rectangle(new Point(0, g.getBorderWidth()),
+                g.getBorderWidth(), g.getHeight() - g.getBorderWidth()), Color.GRAY);
+        top = new Block(new Rectangle(new Point(0, 0), g.getWidth(), g.getBorderWidth()), Color.GRAY);
+        right = new Block(new Rectangle(new Point(g.getWidth() - g.getBorderWidth(), g.getBorderWidth()),
+                g.getBorderWidth(), g.getHeight() - g.getBorderWidth()), Color.GRAY);
+        bottom = new Block(new Rectangle(new Point(g.getBorderWidth(), g.getHeight() - g.getBorderWidth()),
+                g.getWidth() - (g.getBorderWidth() * 2), g.getBorderWidth()), Color.GRAY);
+    }
+    public Borders(int borderWidth, int environmentWidth, int environmentHeight) {
+        left = new Block(new Rectangle(new Point(0, borderWidth),
+                borderWidth, environmentHeight - borderWidth), Color.GRAY);
+        top = new Block(new Rectangle(new Point(0, 0), environmentHeight, borderWidth), Color.GRAY);
+        right = new Block(new Rectangle(new Point(environmentHeight - borderWidth, borderWidth),
+                borderWidth, environmentHeight - borderWidth), Color.GRAY);
+        bottom = new Block(new Rectangle(new Point(borderWidth, environmentHeight - borderWidth),
+                environmentHeight - (borderWidth * 2), borderWidth), Color.GRAY);
     }
 
 
@@ -32,11 +42,11 @@ public class Borders {
         this.left = left;
     }
     /**
-     * Sets the up border value.
-     * @param up the up border value to set
+     * Sets the top border value.
+     * @param top the top border value to set
      */
-    public void setUp(Block up) {
-        this.up = up;
+    public void setTop(Block top) {
+        this.top = top;
     }
     /**
      * Sets the right border value.
@@ -46,11 +56,11 @@ public class Borders {
         this.right = right;
     }
     /**
-     * Sets the down border value.
-     * @param down the down border value to set
+     * Sets the bottom border value.
+     * @param bottom the bottom border value to set
      */
-    public void setDown(Block down) {
-        this.down = down;
+    public void setBottom(Block bottom) {
+        this.bottom = bottom;
     }
     //Queries
     /**
@@ -61,11 +71,11 @@ public class Borders {
         return left;
     }
     /**
-     * Returns the up border value.
-     * @return the up border value
+     * Returns the top border value.
+     * @return the top border value
      */
-    public Block getUp() {
-        return up;
+    public Block getTop() {
+        return top;
     }
     /**
      * Returns the right border value.
@@ -75,26 +85,29 @@ public class Borders {
         return right;
     }
     /**
-     * Returns the down border value.
-     * @return the down border value
+     * Returns the bottom border value.
+     * @return the bottom border value
      */
-    public Block getDown() {
-        return down;
+    public Block getBottom() {
+        return bottom;
+    }
+
+    /**
+     * Generates a random point within the borders.
+     * @return a random point within the borders
+     */
+    public Point generateRandomPoint() {
+        return new Point(Geometry.RAND.nextDouble(right.getRectangle().getLeftSide().start().getX()
+                + left.getRectangle().getRightSide().start().getX()),
+                Geometry.RAND.nextDouble(bottom.getRectangle().getTopSide().start().getY()
+                        + top.getRectangle().getBottomSide().start().getY()));
     }
     /**
      * Returns a string representation of the borders.
      * @return a string representation of the borders
      */
     public String toString() {
-        return "Left border = " + left + " Upper border = " + up + " Right border = "
-                + right + " Down border = " + down;
-    }
-    /**
-     * Generates a random point within the borders.
-     * @return a random point within the borders
-     */
-    public Point generateRandomPoint() {
-        return new Point(Geometry.RAND.nextDouble(right + left),
-                Geometry.RAND.nextDouble(down + up));
+        return "Left Border: " + left.toString() + ".     Top Border: " + top.toString()
+                + ".     Right Border: " + right.toString() + ".     Bottom Border: " + bottom.toString();
     }
 }

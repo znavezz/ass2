@@ -1,25 +1,23 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Rectangle {
-    private Point upperLeft;
+    private Point topLeft;
     private double width;
     private double height;
     private Line leftSide;
-    private Line upSide;
+    private Line topSide;
     private Line rightSide;
-    private Line downSide;
+    private Line bottomSide;
 
     // Create a new rectangle with location and width/height.
-    public Rectangle(Point upperLeft, double width, double height) {
-        this.upperLeft = upperLeft;
+    public Rectangle(Point topLeft, double width, double height) {
+        this.topLeft = topLeft;
         this.width = width;
         this.height = height;
-        leftSide = new Line(upperLeft, getDownLeft());
-        upSide = new Line(upperLeft, getUpperRight());
-        rightSide = new Line(getUpperRight(), getDownRight());
-        downSide = new Line(getDownRight(), getDownLeft());
+        leftSide = new Line(topLeft, getBottomLeft());
+        topSide = new Line(topLeft, getTopRight());
+        rightSide = new Line(getTopRight(), getBottomRight());
+        bottomSide = new Line(getBottomRight(), getBottomLeft());
     }
 
     // Return a (possibly empty) List of intersection points
@@ -30,17 +28,17 @@ public class Rectangle {
         if (withLeft != null) {
             intersectionPoints.add(withLeft);
         }
-        Point withUp = line.intersectionWith(upSide);
-        if (withUp != null) {
-            intersectionPoints.add(withUp);
+        Point withTop = line.intersectionWith(topSide);
+        if (withTop != null) {
+            intersectionPoints.add(withTop);
         }
         Point withRight = line.intersectionWith(rightSide);
         if (withRight != null) {
             intersectionPoints.add(withRight);
         }
-        Point withDown = line.intersectionWith(downSide);
-        if (withDown != null) {
-            intersectionPoints.add(withDown);
+        Point withBottom = line.intersectionWith(bottomSide);
+        if (withBottom != null) {
+            intersectionPoints.add(withBottom);
         }
         line.start().sortByDistance(intersectionPoints, 0, intersectionPoints.size() - 1);
         return intersectionPoints;
@@ -53,29 +51,35 @@ public class Rectangle {
     public double getHeight() {
         return height;
     }
-    // Returns the upper-left point of the rectangle.
-    public Point getUpperLeft() {
-        return upperLeft;
+    // Returns the top-left point of the rectangle.
+    public Point getTopLeft() {
+        return topLeft;
     }
-    public Point getUpperRight() {
-        return new Point(upperLeft.getX() + width, upperLeft.getY());
+    public Point getTopRight() {
+        return new Point(topLeft.getX() + width, topLeft.getY());
     }
-    public Point getDownRight() {
-        return new Point(upperLeft.getX() + width, upperLeft.getY() + height);
+    public Point getBottomRight() {
+        return new Point(topLeft.getX() + width, topLeft.getY() + height);
     }
-    public Point getDownLeft() {
-        return new Point(upperLeft.getX(), upperLeft.getY() + height);
+    public Point getBottomLeft() {
+        return new Point(topLeft.getX(), topLeft.getY() + height);
     }
     public Line getLeftSide() {
         return this.leftSide;
     }
-    public Line getUpSide() {
-        return this.upSide;
+    public Line getTopSide() {
+        return this.topSide;
     }
     public Line getRightSide() {
         return this.rightSide;
     }
-    public Line getDownSide() {
-        return this.downSide;
+    public Line getBottomSide() {
+        return this.bottomSide;
+    }
+    public void setTopLeft(Point point) {
+        topLeft = point;
+    }
+    public String toString() {
+        return "Top Left: " + topLeft.toString() + ".     Width - " + width + ".     Height - " + height;
     }
 }

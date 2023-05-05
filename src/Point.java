@@ -109,15 +109,7 @@ public class Point {
                 && (this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON)
                 && (this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON));
     }
-    /**
-     * This static method generates a random point within the given borders.
-     * @param borders the Borders object that defines the area in which the point will be generated.
-     * @return a random Point object within the given borders.
-     */
-    public static Point generateRandomPoint(Borders borders) {
-        return new Point(Geometry.RAND.nextDouble(borders.getRight()) + borders.getLeft(),
-                Geometry.RAND.nextDouble(borders.getDown()) + borders.getUp());
-    }
+
     public void sortByDistance(ArrayList<Point> points, int l, int r) {
         if (l < r) {
             //Find the middle point

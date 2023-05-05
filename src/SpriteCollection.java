@@ -3,7 +3,7 @@ import biuoop.DrawSurface;
 import java.util.ArrayList;
 
 public class SpriteCollection {
-    private ArrayList<Sprite> sprites;
+    private ArrayList<Sprite> sprites = new ArrayList<Sprite>();
     public void addSprite(Sprite s) {
         sprites.add(s);
     }
@@ -18,5 +18,8 @@ public class SpriteCollection {
         for (Sprite sprite : sprites) {
             sprite.drawOn(d);
         }
+    }
+    public ArrayList<Sprite> getSprites() {
+        return sprites;
     }
 }

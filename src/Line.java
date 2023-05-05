@@ -1,7 +1,6 @@
 import biuoop.DrawSurface;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Nave Zehoray < znavez@gmail.com >

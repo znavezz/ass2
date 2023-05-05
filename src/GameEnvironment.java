@@ -1,51 +1,40 @@
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 
 public class GameEnvironment {
-    public static final int WIDTH = 850;
-    public static final int HEIGHT = 600;
-    public static final int DEFAULT_BORDERS_WIDTH = 10;
+    private int width = 850;
+    private int height = 650;
+    private int borderWidth = 25;
+    private Paddle paddle;
+    private Borders borders = new Borders(borderWidth, width, height);
+    private ArrayList<Collidable> collidables = new ArrayList<Collidable>() {
+        {
+            try {
+                add(borders.getLeft());
+                add(borders.getTop());
+                add(borders.getRight());
+                add(borders.getBottom());
+            } catch (Exception e) {
+            }
+        }
+    };
 
-    private ArrayList<Collidable> collidables;
-    private Block leftBorder;
-    private Block upperBorder;
-    private Block rightBorder;
-    private Block downBorder;
-    private int borderWidth;
-    private int width;
-    private int height;
     public GameEnvironment() {
-        collidables = new ArrayList<Collidable>();
-        leftBorder = new Block(new Rectangle(new Point(0, 0), BORDERS_WIDTH, HEIGHT), Color.BLACK);
-        upperBorder = new Block(new Rectangle(new Point(0, 0), WIDTH, BORDERS_WIDTH), Color.BLACK);
-        rightBorder = new Block(new Rectangle(new Point(WIDTH - BORDERS_WIDTH, 0), BORDERS_WIDTH, HEIGHT), Color.BLACK);
-        downBorder = new Block(new Rectangle(new Point(0, HEIGHT - BORDERS_WIDTH), WIDTH, BORDERS_WIDTH), Color.BLACK);
-        collidables.add(leftBorder);
-        collidables.add(upperBorder);
-        collidables.add(rightBorder);
-        collidables.add(downBorder);
-    }
-    public GameEnvironment(ArrayList<Collidable> collidables, Block leftBorder, Block upperBorder,
-                           Block rightBorder, Block downBorder) {
-        this.collidables = collidables;
-        this.leftBorder = leftBorder;
-        this.upperBorder = upperBorder;
-        this.rightBorder = rightBorder;
-        this.downBorder = downBorder;
     }
 
-    public Block getLeftBorder() {
-        return leftBorder;
+    public GameEnvironment(ArrayList<Collidable> collidables, Borders borders) {
+        this.collidables = collidables;
+        this.borders = borders;
+        addCollidable(borders.getLeft());
+        addCollidable(borders.getTop());
+        addCollidable(borders.getRight());
+        addCollidable(borders.getBottom());
     }
-    public Block getUpperBorder() {
-        return upperBorder;
+
+    public Borders getBorders() {
+        return borders;
     }
-    public Block getRightBorder() {
-        return rightBorder;
-    }
-    public Block getDownBorder() {
-        return downBorder;
-    }
+
     public ArrayList<Collidable> getCollidables() {
         return collidables;
     }
@@ -104,5 +93,13 @@ public class GameEnvironment {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public void setPaddle(Paddle paddle) {
+        this.paddle = paddle;
+    }
+
+    public Paddle getPaddle() {
+        return paddle;
     }
 }
