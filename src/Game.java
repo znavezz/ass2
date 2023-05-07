@@ -3,56 +3,89 @@ import biuoop.GUI;
 import biuoop.Sleeper;
 
 import java.awt.Color;
-
+/**
+ * Represents the main game class, which initializes and runs the game.
+ */
 public class Game {
+    //Fields
     private GameEnvironment environment = new GameEnvironment();
     private SpriteCollection sprites = new SpriteCollection();
     private String gameName = "Arkanoid";
     private GUI gui = new GUI(gameName, environment.getWidth(), environment.getHeight());
     private Sleeper sleeper = new Sleeper();
-
+    /**
+     * The main entry point of the application.
+     * @param args command-line arguments (not used)
+     */
     public static void main(String[] args) {
         Game game = new Game();
         game.initialize();
         game.run();
     }
-
-
+    //Constructors
+    /**
+     * Constructs a new Game object amd set the environment of the game.
+     */
+    public Game() {
+        setEnvironment(environment);
+    }
+    //Commands
+    /**
+     * Adds a collidable object to the game environment.
+     * @param c the Collidable object to be added
+     */
     public void addCollidable(Collidable c) {
         environment.addCollidable(c);
     }
-
+    /**
+     * Adds a sprite object to the game.
+     * @param s the Sprite object to be added
+     */
     public void addSprite(Sprite s) {
         sprites.addSprite(s);
     }
-
-    // Initialize a new game: create the Blocks and Ball (and Paddle)
-    // and add them to the game.
+    /**
+     * Sets the game environment and adds the necessary sprites and collidables.
+     * @param environment the GameEnvironment object to be set
+     */
+    public void setEnvironment(GameEnvironment environment) {
+        this.environment = environment;
+        sprites.addSprite(environment.getBackGround());
+        for (Collidable collidable : environment.getCollidables()) {
+            sprites.addSprite((Sprite) collidable);
+        }
+        environment.getPaddle().setKeyboard(gui.getKeyboardSensor());
+    }
+    /**
+     * Initializes a new game by creating the Blocks, Ball, and Paddle and adding them to the game.
+     */
     public void initialize() {
-        int blockWidth = 75;
-        int blockHeight = 25;
-        int widthSpace = 50;
-        int heightSpace = 25;
-        setEnvironment(environment);
 
-        Color blockColor = new Color(Geometry.RAND.nextInt(100), Geometry.RAND.nextInt(100), Geometry.RAND.nextInt(100));
+        int blockWidth = 50;
+        int blockHeight = 20;
+        Color blockColor = new Color(Geometry.RAND.nextInt(100), Geometry.RAND.nextInt(100),
+                Geometry.RAND.nextInt(100));
         for (int i = 0; i <= 5; i++) {
-            blockColor = new Color(blockColor.getRed() + (i * 10), blockColor.getGreen() + (i * 10), blockColor.getBlue() + (i * 10));
-            for (int j = environment.getWidth() - blockWidth - environment.getBorderWidth(); j >= (3 + i) * blockWidth;
+            blockColor = new Color(blockColor.getRed() + (i * 10), blockColor.getGreen() + (i * 10),
+                    blockColor.getBlue() + (i * 10));
+            for (int j = environment.getWidth() - blockWidth - environment.getVerticalBorderWidth();
+                 j >= (3 + i) * blockWidth;
                  j -= blockWidth) {
-                Block newBlock = new Block(new Rectangle(new Point(j, environment.getBorderWidth() + ((4 + i) * blockHeight)),
+                Block newBlock = new Block(new Rectangle(new Point(j, environment.getHorizontalBorderWidth()
+                        + ((7 + i) * blockHeight)),
                         blockWidth, blockHeight), blockColor);
                 newBlock.addToGame(this);
             }
         }
-        Paddle paddle = new Paddle(gui.getKeyboardSensor());
-        environment.setPaddle(paddle);
-        environment.getPaddle().addToGame(this);
-        Ball ball = new Ball(environment, new Point(300, 550));
-        ball.addToGame(this);
+
+        environment.getBalls().addBall(new Ball(environment, new Point(600, 550)));
+        environment.getBalls().addBall(new Ball(environment, new Point(550, 550)));
+        environment.getBalls().addToGame(this);
     }
 
-    // Run the game -- start the animation loop.
+    /**
+     * Runs the game by starting the animation loop.
+     */
     public void run() {
         //...
         int framesPerSecond = 60;
@@ -76,40 +109,19 @@ public class Game {
             }
         }
     }
+    //Queries
+    /**
+     * Returns the game environment.
+     * @return the GameEnvironment object
+     */
     public GameEnvironment getEnvironment() {
         return environment;
     }
-    public void setEnvironment(GameEnvironment environment) {
-        this.environment = environment;
-        for (Collidable collidable : environment.getCollidables()) {
-            collidable.addToGame(this);
-        }
+    /**
+     * Returns the GUI object of the game.
+     * @return the GUI object
+     */
+    public GUI getGui() {
+        return gui;
     }
 }
-
-
-
-//    public void initialize() {
-//        int blockWidth = 75;
-//        int blockHeight = 25;
-//        int widthSpace = 50;
-//        int heightSpace = 25;
-//        environment.getBottomBorder().addToGame(this);
-//        environment.getRightBorder().addToGame(this);
-//        environment.getTopBorder().addToGame(this);
-//        environment.getLeftBorder().addToGame(this);
-//        for (int i = blockWidth; i < environment.getHeight() / 2; i += blockHeight + heightSpace) {
-//            Color blockColor = new Color(Geometry.RAND.nextInt(255),
-//                    Geometry.RAND.nextInt(255), Geometry.RAND.nextInt(255));
-//            for (int j = blockWidth; j + blockWidth + widthSpace < environment.getWidth();
-//                 j += blockWidth + widthSpace) {
-//                Block newBlock = new Block(new Rectangle(new Point(j, i),
-//                        blockWidth, blockHeight), blockColor);
-//                newBlock.addToGame(this);
-//            }
-//        }
-//        Paddle paddle = new Paddle(gui.getKeyboardSensor());
-//        paddle.addToGame(this);
-//        Ball ball = new Ball(environment, new Point(300, 550));
-//        ball.addToGame(this);
-//    }

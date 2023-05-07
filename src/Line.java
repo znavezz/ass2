@@ -25,6 +25,12 @@ public class Line {
         start = new Point(x1, y1);
         end = new Point(x2, y2);
     }
+
+    /**
+     * Constructs a new Line object with the specified start and end points.
+     * @param start the start point of the line.
+     * @param end the end point of the line.
+     */
     public Line(Point start, Point end) {
         this.start = start;
         this.end = end;
@@ -69,28 +75,6 @@ public class Line {
         double deltaX = this.start.getX() - this.end.getX();
         double deltaY = this.start.getY() - this.end.getY();
         return (deltaY / deltaX); //slope formula
-    }
-    /**
-     * Returns the middle point of the line.
-     * @return the middle point of the line
-     */
-    public Point middle() {
-        return new Point(((this.start.getX() + this.end.getX()) / 2),
-                ((this.start.getY() + this.end.getY()) / 2));
-    }
-    /**
-     * Returns the start point of the line.
-     * @return the start point of the line
-     */
-    public Point start() {
-        return this.start;
-    }
-    /**
-     * Returns the end point of the line.
-     * @return the end point of the line
-     */
-    public Point end() {
-        return this.end;
     }
     /**
      * Returns the intersection point of the line with the Y-axis.
@@ -173,6 +157,37 @@ public class Line {
         }
     }
     /**
+     * Returns true if this line is equal to the other line, false otherwise.
+     * @param other the other line to check for equality with this line
+     * @return true if this line is equal to the other line, false otherwise
+     */
+    public boolean isEquals(Line other) {
+        return (((this.start.equals(other.start())) && (this.end.equals(other.end())))
+                || ((this.start.equals(other.end())) && (this.end.equals(other.start()))));
+    }
+    /**
+     * Returns the middle point of the line.
+     * @return the middle point of the line
+     */
+    public Point middle() {
+        return new Point(((this.start.getX() + this.end.getX()) / 2),
+                ((this.start.getY() + this.end.getY()) / 2));
+    }
+    /**
+     * Returns the start point of the line.
+     * @return the start point of the line
+     */
+    public Point start() {
+        return this.start;
+    }
+    /**
+     * Returns the end point of the line.
+     * @return the end point of the line
+     */
+    public Point end() {
+        return this.end;
+    }
+    /**
      * Returns the intersection point if this line intersects with the other line,
      * and null otherwise (including cases of inclusion).
      * @param other the other line to check for intersection with this line
@@ -204,9 +219,12 @@ public class Line {
             return new Point(x, this.getYOfX(x));
         }
     }
-        // If this line does not intersect with the rectangle, return null.
-        // Otherwise, return the closest intersection point to the
-        // start of the line.
+    /**
+     * Returns the closest intersection point of the line with the given rectangle.
+     * If there are no intersection points, returns null.
+     * @param rec the rectangle to check for intersection points
+     * @return the closest intersection point to the start of the line or null if no intersection points
+     */
     public Point closestIntersectionToStartOfLine(Rectangle rec) {
         ArrayList<Point> intersectionPoints = (ArrayList<Point>) rec.intersectionPoints(this);
         if (intersectionPoints.isEmpty()) {
@@ -214,14 +232,5 @@ public class Line {
         } else {
             return intersectionPoints.get(0);
         }
-    }
-    /**
-     * Returns true if this line is equal to the other line, false otherwise.
-     * @param other the other line to check for equality with this line
-     * @return true if this line is equal to the other line, false otherwise
-     */
-    public boolean isEquals(Line other) {
-        return (((this.start.equals(other.start())) && (this.end.equals(other.end())))
-                || ((this.start.equals(other.end())) && (this.end.equals(other.start()))));
     }
 }

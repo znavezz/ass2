@@ -6,7 +6,7 @@ import java.util.Random;
  * It is also holds static member like EPSILON which used as a treshold for comparing.
  */
 public class Geometry {
-
+    //Fields
     public static final double EPSILON = 0.00001;
     public static final Random RAND = new Random();
     /**
@@ -15,6 +15,7 @@ public class Geometry {
      * @param b the second double value.
      * @return true if the difference between a and b is less than EPSILON, false otherwise.
      */
+   //Queries
     public static boolean doubleEquals(double a, double b) {
         return Math.abs(a - b) < EPSILON;
     }

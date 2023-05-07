@@ -12,10 +12,9 @@ import java.awt.Color;
  */
 public class Ball implements Sprite {
     //Fields
-    private GameEnvironment gameEnvironment;
-    private static final int SCALING_FACTOR = 60;
+    private GameEnvironment environment;
+    private static final int SCALING_FACTOR = 40;
     private final Random rand = new Random();
-    private Borders borders;
     private Point center;
     private int size;
     private Velocity velocity;
@@ -23,105 +22,17 @@ public class Ball implements Sprite {
 
     //constructors
     /**
-     * Constructs a Ball with random attributes (center, size, color, and angle).
-     * Ensures the ball is within the borders after initialization.
+     * Constructs a Ball object with a specified GameEnvironment and center point.
+     * Sets the ball's size to 6, assigns a random color, and initializes its velocity.
+     * @param environment the GameEnvironment the ball is placed in
+     * @param center the center point of the ball
      */
-    public Ball() {
-            center = borders.generateRandomPoint();
-            size = rand.nextInt(getMaxSize()) + getMinSize();
-            color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-            velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
-            fixBall(); // Ensure the ball is within borders
-    }
-    public Ball(GameEnvironment gameEnvironment, Point center) {
+    public Ball(GameEnvironment environment, Point center) {
         this.center = center;
-        this.gameEnvironment = gameEnvironment;
+        this.environment = environment;
         size = 6;
         color = new Color(Geometry.RAND.nextInt(255), Geometry.RAND.nextInt(255), Geometry.RAND.nextInt(255));
-        velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), sizeToSpeed());
-    }
-    /**
-     * Constructs a Ball with the specified center, size, random color, and borders. The velocity is randomly generated.
-     * Ensures the ball is within the borders after initialization.
-     * @param center the center Point of the ball.
-     * @param r the radius of the ball.
-     */
-    public Ball(Point center, int r) {
-        this.center = center;
-        size = r;
-        fixSize();
-        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        fixBall(); // Ensure the ball is within borders
-    }
-    /**
-     * Constructs a Ball with the specified size, random color, and borders. The velocity is randomly generated.
-     * Ensures the ball is within the borders after initialization.
-     * @param r the radius of the ball.
-     */
-    public Ball(int r) {
-        center = borders.generateRandomPoint();
-        size = r;
-        fixSize();
-        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        fixBall(); // Ensure the ball is within borders
-    }
-    /**
-     * Constructs a Ball with the specified center, size, random color, and borders. The velocity is randomly generated.
-     * Ensures the ball is within the borders after initialization.
-     * @param center the center Point of the ball.
-     * @param size the radius of the ball.
-     * @param color the color of the ball.
-     */
-    public Ball(Point center, int size, Color color) {
-        this.center = center;
-        this.size = size;
-        fixSize();
-        this.color = color;
-        this.velocity = Velocity.fromAngleAndSpeed(Geometry.getRandomAngle(), this.sizeToSpeed());
-        fixBall(); // Ensure the ball is within borders
-    }
-    /**
-     * Constructs a Ball with the specified center, size, color, borders, and velocity.
-     * Ensures the ball is within the borders after initialization.
-     * @param center the center Point of the ball.
-     * @param r the radius of the ball.
-     * @param v the velocity of the ball.
-     */
-    public Ball(Point center, int r, Velocity v) {
-        this.center = center;
-        size = r;
-        fixSize();
-        Color randColor = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
-        color = randColor;
-        velocity = v;
-        fixBall(); // Ensure the ball is within borders
-    }
-    /**
-     * Constructs a Ball object with a specified starting point, borders, and velocity components.
-     * @param start the starting point of the ball's center.
-     * @param dx the horizontal component of the ball's velocity.
-     * @param dy the vertical component of the ball's velocity.
-     */
-    public Ball(Point start, double dx, double dy) {
-        center = start;
-        if (dx > 30) {
-            dx = 30;
-        }
-        if (dy > 30) {
-            dy = 30;
-        }
-        velocity = new Velocity(dx, dy);
-        if (velocity.getMagnitude() == 0) {
-            size = (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
-                    - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                    borders.getBottom().getRectangle().getTopSide().start().getY()
-                            - borders.getTop().getRectangle().getBottomSide().start().getY()) / 4;
-        } else {
-            size = velocityToSize();
-        }
-        color = new Color(rand.nextInt(255), rand.nextInt(255), rand.nextInt(255));
+        velocity = Velocity.fromAngleAndSpeed(120, sizeToSpeed());
     }
     //Commands
     /**
@@ -164,7 +75,9 @@ public class Ball implements Sprite {
         surface.setColor(this.color);
         surface.fillCircle((int) Math.round(this.center.getX()), (int) Math.round(this.center.getY()), this.size);
     }
-
+    /**
+     * Notify the ball that time has passed and activate moveOneStep() method.
+     */
     public void timePassed() {
         moveOneStep();
     }
@@ -178,32 +91,44 @@ public class Ball implements Sprite {
         this.velocity.setDx(dx);
         this.velocity.setDy(dy);
     }
-
+    /**
+     * Adjusts the ball's position to keep it inside the left border.
+     */
     public void putInLeftBorder() {
         if (isOutOfLeft()) {
-            this.center.setX(this.size + this.borders.getLeft().getRectangle().getRightSide().start().getX());
-        }
-    }
-
-    public void putInRightBorder() {
-        if (isOutOfRight()) {
-            this.center.setX(this.borders.getRight().getRectangle().getLeftSide().start().getX() - this.size);
-        }
-    }
-
-    public void putInTopBorder() {
-        if (isOutOfTop()) {
-            this.center.setY(this.size + this.borders.getTop().getRectangle().getBottomSide().start().getY());
-        }
-    }
-
-    public void putInBottomBorder() {
-        if (isOutOfBottom()) {
-            this.center.setY(this.borders.getBottom().getRectangle().getTopSide().start().getY() - this.size);
+            this.center.setX(this.size + this.environment.getBorders().getLeft().
+                    getRectangle().getRightSide().start().getX());
         }
     }
     /**
-     * Adjusts the ball's size if it is larger than a sixth of the smaller border dimension.
+     * Adjusts the ball's position to keep it inside the right border.
+     */
+    public void putInRightBorder() {
+        if (isOutOfRight()) {
+            this.center.setX(this.environment.getBorders().getRight().getRectangle().
+                    getLeftSide().start().getX() - this.size);
+        }
+    }
+    /**
+     * Adjusts the ball's position to keep it inside the top border.
+     */
+    public void putInTopBorder() {
+        if (isOutOfTop()) {
+            this.center.setY(this.size + this.environment.getBorders().getTop().getRectangle().
+                    getBottomSide().start().getY());
+        }
+    }
+    /**
+     * Adjusts the ball's position to keep it inside the bottom border.
+     */
+    public void putInBottomBorder() {
+        if (isOutOfBottom()) {
+            this.center.setY(this.environment.getBorders().getBottom().getRectangle().
+                    getTopSide().start().getY() - this.size);
+        }
+    }
+    /**
+     * Fixes the ball's position, ensuring it stays within the borders.
      */
     public void fixPosition() {
         putInLeftBorder();
@@ -232,13 +157,13 @@ public class Ball implements Sprite {
     }
     /**
      * Updates the ball's position based on its velocity and checks for collisions with borders.
-     * If a collision occurs, the ball's position is adjusted, and its velocity is topdated accordingly.
+     * If a collision occurs, the ball's position is adjusted, and its velocity is updated accordingly.
      */
     public void moveOneStep() {
         Point endOfTrajectory = new Point(center);
         velocity.applyToPoint(endOfTrajectory);
         Line trajectory = new Line(center, endOfTrajectory);
-        CollisionInfo closestCollision = gameEnvironment.getClosestCollision(trajectory);
+        CollisionInfo closestCollision = environment.getClosestCollision(trajectory);
         if (closestCollision == null) {
             velocity.applyToPoint(center);
         } else {
@@ -248,24 +173,26 @@ public class Ball implements Sprite {
             Line topSide = closestCollision.collisionObject().getCollisionRectangle().getTopSide();
             Point collision = closestCollision.collisionPoint();
             if (collision.isOnLine(bottomSide)) {
-               center.setY(1 + (bottomSide.start().getY()));
-               // center.setX(collision.getX() + (1 / Math.tan(Math.toRadians(velocity.getAngle()))));
+                center.setY(bottomSide.start().getY() + size);
             }
             if (collision.isOnLine(rightSide)) {
-                center.setX(rightSide.start().getX() + 1);
+                center.setX(rightSide.start().getX() + size);
             }
             if (collision.isOnLine(topSide)) {
-                center.setY(topSide.start().getY() - 1);
+                center.setY(topSide.start().getY() - size);
             }
             if (collision.isOnLine(leftSide)) {
-                center.setX(leftSide.start().getX() - 1);
+                center.setX(leftSide.start().getX() - size);
             }
             velocity = closestCollision.collisionObject().hit(closestCollision.collisionPoint(), velocity);
         }
     }
+    /**
+     * Adds the ball to the game environment and associates it with the paddle.
+     * @param g the game environment
+     */
     public void addToGame(Game g) {
         g.addSprite(this);
-        g.getEnvironment().getPaddle().addBall(this);
     }
     //Queries
     /**
@@ -281,50 +208,76 @@ public class Ball implements Sprite {
         return (int) Math.round(this.center.getY());
     }
     /**
-     * @return the center point of the ball.
-     */
-    public Point getCenter() {
-        return this.center;
-    }
-    /**
      * @return the size of the ball.
      */
     public int getSize() {
         return this.size;
     }
     /**
-     * @return the color of the ball.
+     * Converts the ball's velocity magnitude to a size value by dividing the scaling factor
+     * by either the magnitude or 30 (whichever is smaller).
+     * @return the calculated size value
      */
-    public Color getColor() {
-        return this.color;
+
+    public int velocityToSize() {
+        if (velocity.getMagnitude() > 30) {
+            return (SCALING_FACTOR / 30);
+        } else {
+            return (int) (SCALING_FACTOR / velocity.getMagnitude());
+        }
     }
     /**
-     * Gets the current velocity of the ball.
-     * @return the Velocity object representing the ball's velocity.
+     * Calculates the maximum allowed size for the ball based on the dimensions of the borders.
+     * @return the maximum size
      */
-    public Velocity getVelocity() {
-        return this.velocity;
+    public int getMaxSize() {
+        return (int) Math.min(environment.getBorders().getRight().getRectangle().getLeftSide().start().getX()
+                        - environment.getBorders().getLeft().getRectangle().getRightSide().start().getX(),
+                environment.getBorders().getBottom().getRectangle().getTopSide().start().getY()
+                        - environment.getBorders().getTop().getRectangle().getBottomSide().start().getY()) / 4;
+    }
+    /**
+     * Calculates the minimum allowed size for the ball based on the dimensions of the borders.
+     * The minimum size cannot be smaller than 5.
+     * @return the minimum size allowed
+     */
+    public int getMinSize() {
+        return Math.min(((int) Math.min(environment.getBorders().getRight().getRectangle().getLeftSide().start().getX()
+                        - environment.getBorders().getLeft().getRectangle().getRightSide().start().getX(),
+                environment.getBorders().getBottom().getRectangle().getTopSide().start().getY()
+                        - environment.getBorders().getTop().getRectangle().getBottomSide().start().getY()) / 20), 5);
+    }
+    /**
+     * Converts the ball's size to an appropriate speed value.
+     * @return the calculated speed value based on the ball's size.
+     */
+    public double sizeToSpeed() {
+        if (this.size > 50) {
+            return SCALING_FACTOR / 50;
+        } else {
+            return SCALING_FACTOR / this.size;
+        }
     }
     /**
      * Checks if the ball is out of the top border.
      * @return true if the ball is out of the top border, false otherwise.
      */
     public boolean isOutOfTop() {
-        return (center.getY() - borders.getTop().getRectangle().getBottomSide().start().getY() < size);
+        return (center.getY() - environment.getBorders().getTop().getRectangle().getBottomSide().start().getY() < size);
     }
     /**
      * Checks if the ball is out of the bottom border.
      * @return true if the ball is out of the bottom border, false otherwise.
      */
     public boolean isOutOfBottom() {
-        return (center.getY() + size > borders.getBottom().getRectangle().getTopSide().start().getY());
+        return (center.getY() + size > environment.getBorders().getBottom().getRectangle().getTopSide().start().getY());
     }
     /**
      * Checks if the ball is out of the right border.
      * @return true if the ball is out of the right border, false otherwise.
      */
     public boolean isOutOfRight() {
-        return (center.getX() + size > borders.getRight().getRectangle().getLeftSide().start().getX());
+        return (center.getX() + size > environment.getBorders().getRight().getRectangle().getLeftSide().start().getX());
     }
 
     /**
@@ -332,7 +285,7 @@ public class Ball implements Sprite {
      * @return true if the ball is out of the left border, false otherwise.
      */
     public boolean isOutOfLeft() {
-        return (center.getX() - borders.getLeft().getRectangle().getRightSide().start().getX() < size);
+        return (center.getX() - environment.getBorders().getLeft().getRectangle().getRightSide().start().getX() < size);
     }
     /**
      * Checks if the ball is out of the width borders (left or right).
@@ -356,6 +309,19 @@ public class Ball implements Sprite {
     public boolean isOutOfFrame() {
         return this.isOutOfWidth() || this.isOutOfHeight();
     }
+    /**
+     * Checks if the ball overlaps the given rectangle.
+     * @param rec the rectangle to check for overlap
+     * @return true if the ball overlaps the rectangle, false otherwise
+     */
+    public boolean isOverLapRec(Rectangle rec) {
+        return ((center.getX() + size > rec.getTopLeft().getX() && center.getX() < rec.getTopRight().getX())
+                || (center.getX() - size < rec.getTopRight().getX() && center.getX() - size > rec.getTopLeft().getX()))
+                && (center.getY() + size > rec.getTopRight().getY() && center.getY()
+                + size < rec.getBottomRight().getY())
+                || (center.getY() - size < rec.getBottomLeft().getY() && center.getY() - size
+                > rec.getTopLeft().getY());
+    }
 
     /**
      * Returns a string representation of the ball, including its size, color, center position, and borders.
@@ -366,48 +332,23 @@ public class Ball implements Sprite {
                 + ".    Center = " + center.toString() + ".     Velocity = " + velocity.toString();
     }
     /**
-     * Converts the ball's size to an appropriate speed value.
-     * @return the calculated speed value based on the ball's size.
+     * @return the center point of the ball.
      */
-    public double sizeToSpeed() {
-        if (this.size > 50) {
-            return SCALING_FACTOR / 50;
-        } else {
-            return SCALING_FACTOR / this.size;
-        }
+    public Point getCenter() {
+        return this.center;
     }
-    /**
-     * Converts the ball's velocity magnitude to a size value by dividing the scaling factor
-     * by either the magnitude or 30 (whichever is smaller).
-     * @return the calculated size value
-     */
 
-    public int velocityToSize() {
-        if (velocity.getMagnitude() > 30) {
-            return (SCALING_FACTOR / 30);
-        } else {
-            return (int) (SCALING_FACTOR / velocity.getMagnitude());
-        }
+    /**
+     * @return the color of the ball.
+     */
+    public Color getColor() {
+        return this.color;
     }
     /**
-     * Calculates the maximum allowed size for the ball based on the dimensions of the borders.
-     * @return the maximum size
+     * Gets the current velocity of the ball.
+     * @return the Velocity object representing the ball's velocity.
      */
-    public int getMaxSize() {
-        return (int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
-                - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                borders.getBottom().getRectangle().getTopSide().start().getY()
-                - borders.getTop().getRectangle().getBottomSide().start().getY()) / 4;
-    }
-    /**
-     * Calculates the minimum allowed size for the ball based on the dimensions of the borders.
-     * The minimum size cannot be smaller than 5.
-     * @return the minimum size allowed
-     */
-    public int getMinSize() {
-        return Math.min(((int) Math.min(borders.getRight().getRectangle().getLeftSide().start().getX()
-                - borders.getLeft().getRectangle().getRightSide().start().getX(),
-                borders.getBottom().getRectangle().getTopSide().start().getY()
-                        - borders.getTop().getRectangle().getBottomSide().start().getY()) / 20), 5);
+    public Velocity getVelocity() {
+        return this.velocity;
     }
 }

@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-
 /**
  * Represents a point with x and y coordinates.
  */
@@ -49,10 +47,63 @@ public class Point {
         this.y = y;
     }
     /**
+     * Sorts the given list of points based on their distances from this point using the merge sort algorithm.
+     * @param points the ArrayList of points to sort
+     * @param l the left index of the sub-array
+     * @param r the right index of the sub-array
+     */
+    public void sortByDistance(ArrayList<Point> points, int l, int r) {
+        if (l < r) {
+            //Find the middle point
+            int m = l + (r - l) / 2;
+            sortByDistance(points, l, m);
+            sortByDistance(points, m + 1, r);
+            mergeByDistance(points, l, m, r);
+        }
+    }
+    /**
+     * Merges two sorted sub-arrays of the given list of points into a single sorted sub-array,
+     * based on their distances from this point.
+     * This method is used as part of the merge sort algorithm in the sortByDistance method.
+     * @param points the ArrayList of points containing the sub-arrays to merge
+     * @param l the left index of the first sub-array
+     * @param m the middle index separating the two sub-arrays
+     * @param r the right index of the second sub-array
+     */
+    public void mergeByDistance(ArrayList<Point> points, int l, int m, int r) {
+        int sizeOfLeftSubArray = m - l + 1;
+        int sizeOfRightSubArray = r - m;
+        ArrayList<Point> leftSubArray = new ArrayList<>(points.subList(l, m + 1));
+        ArrayList<Point> rightSubArray = new ArrayList<>(points.subList(m + 1, r + 1));
+        int i = 0;
+        int j = 0;
+        int k = l;
+        while (i < sizeOfLeftSubArray && j < sizeOfRightSubArray) {
+            if (distance(leftSubArray.get(i)) < distance(rightSubArray.get(j))) {
+                points.set(k, leftSubArray.get(i));
+                i++;
+            } else {
+                points.set(k, rightSubArray.get(j));
+                j++;
+            }
+            k++;
+        }
+        while (i < sizeOfLeftSubArray) {
+            points.set(k, leftSubArray.get(i));
+            i++;
+            k++;
+        }
+        while (j < sizeOfRightSubArray) {
+            points.set(k, rightSubArray.get(j));
+            j++;
+            k++;
+        }
+    }
+    //Queries
+    /**
      * Returns a string representation of this point.
      * @return a string representation of this point
      */
-    //Queries
     public String toString() {
         return "(" + this.x + "," + this.y + ")";
     }
@@ -101,51 +152,23 @@ public class Point {
             return Geometry.doubleEquals(this.x, l.start().getX())
                     && this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON
                     && this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON;
-        }
-        //otherwise
-        return ((Geometry.doubleEquals(this.y, ((l.getSlope() * this.x)) + l.intersectWithYAxis()))
-                && (this.x <= Math.max(l.start().getX(), l.end().getX()) + Geometry.EPSILON)
-                && (this.x >= Math.min(l.start().getX(), l.end().getX()) - Geometry.EPSILON)
-                && (this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON)
-                && (this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON));
-    }
-
-    public void sortByDistance(ArrayList<Point> points, int l, int r) {
-        if (l < r) {
-            //Find the middle point
-            int m = l + (r - l) / 2;
-            sortByDistance(points, l, m);
-            sortByDistance(points, m + 1, r);
-            mergeByDistance(points, l, m, r);
+        } else {
+            return ((Geometry.doubleEquals(this.y, ((l.getSlope() * this.x)) + l.intersectWithYAxis()))
+                    && (this.x <= Math.max(l.start().getX(), l.end().getX()) + Geometry.EPSILON)
+                    && (this.x >= Math.min(l.start().getX(), l.end().getX()) - Geometry.EPSILON)
+                    && (this.y <= Math.max(l.start().getY(), l.end().getY()) + Geometry.EPSILON)
+                    && (this.y >= Math.min(l.start().getY(), l.end().getY()) - Geometry.EPSILON));
         }
     }
-    public void mergeByDistance(ArrayList<Point> points, int l, int m, int r) {
-        int sizeOfLeftSubArray = m - l + 1;
-        int sizeOfRightSubArray = r - m;
-        ArrayList<Point> leftSubArray = new ArrayList<>(points.subList(l, m + 1));
-        ArrayList<Point> rightSubArray = new ArrayList<>(points.subList(m + 1, r + 1));
-        int i = 0;
-        int j = 0;
-        int k = l;
-        while (i < sizeOfLeftSubArray && j < sizeOfRightSubArray) {
-            if (distance(leftSubArray.get(i)) < distance(rightSubArray.get(j))) {
-                points.set(k, leftSubArray.get(i));
-                i++;
-            } else {
-                points.set(k, rightSubArray.get(j));
-                j++;
-            }
-            k++;
-        }
-        while (i < sizeOfLeftSubArray) {
-            points.set(k, leftSubArray.get(i));
-            i++;
-            k++;
-        }
-        while (j < sizeOfRightSubArray) {
-            points.set(k, rightSubArray.get(j));
-            j++;
-            k++;
-        }
+    /**
+     * Determines whether this point is inside the given rectangle.
+     * @param rec the rectangle to check if this point is inside
+     * @return true if this point is inside the given rectangle, false otherwise
+     */
+    public boolean isInRectangle(Rectangle rec) {
+        return ((Geometry.doubleEquals(x, rec.getTopLeft().getX()) || x > rec.getTopLeft().getX())
+                && (Geometry.doubleEquals(x, rec.getTopRight().getX()) || x < rec.getTopRight().getX()))
+                && ((Geometry.doubleEquals(y, rec.getTopLeft().getY()) || y > rec.getTopLeft().getY())
+                && (Geometry.doubleEquals(y, rec.getBottomLeft().getY()) || y < rec.getBottomLeft().getY()));
     }
 }

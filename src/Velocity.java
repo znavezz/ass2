@@ -24,8 +24,14 @@ public class Velocity {
      * @return a Velocity object with the specified angle and speed.
      */
     public static Velocity fromAngleAndSpeed(double angle, double speed) {
-        double dx = speed * Math.sin(Math.toRadians(angle));
-        double dy = -speed * Math.cos(Math.toRadians(angle));
+        angle -= 90;
+        double dx = speed * Math.cos(Math.toRadians(angle));
+        double dy = speed * Math.sin(Math.toRadians(angle));
+//        if (angle > 0 &&  angle < 180) {
+//            dy = speed * Math.cos(Math.toRadians(angle));
+//        } else {
+//            dy = -speed * Math.cos(Math.toRadians(angle));
+//        }
         return new Velocity(dx, dy);
     }
     //Commands
@@ -72,7 +78,7 @@ public class Velocity {
      * @return the angle of the velocity in radians.
      */
     public double getAngle() {
-        return Math.toDegrees(Math.atan2(dy, dx));
+        return Math.toDegrees(Math.atan(dy / dx));
     }
     /**
      * Returns the magnitude of the velocity.
@@ -86,6 +92,6 @@ public class Velocity {
      * @return a string representation of the Velocity object.
      */
     public String toString() {
-        return "Dx = " + dx + " Dy = " + dy;
+        return "Dx = " + dx + " Dy = " + dy + "     Angle = " + getAngle();
     }
 }

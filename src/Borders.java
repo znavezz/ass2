@@ -12,24 +12,36 @@ public class Borders {
     private Block right;
     private Block bottom;
     //Constructors
-
+    /**
+     * Constructor for the Borders class, using a GameEnvironment object.
+     * @param g the GameEnvironment object containing information about the game's borders
+     */
     public Borders(GameEnvironment g) {
-        left = new Block(new Rectangle(new Point(0, g.getBorderWidth()),
-                g.getBorderWidth(), g.getHeight() - g.getBorderWidth()), Color.GRAY);
-        top = new Block(new Rectangle(new Point(0, 0), g.getWidth(), g.getBorderWidth()), Color.GRAY);
-        right = new Block(new Rectangle(new Point(g.getWidth() - g.getBorderWidth(), g.getBorderWidth()),
-                g.getBorderWidth(), g.getHeight() - g.getBorderWidth()), Color.GRAY);
-        bottom = new Block(new Rectangle(new Point(g.getBorderWidth(), g.getHeight() - g.getBorderWidth()),
-                g.getWidth() - (g.getBorderWidth() * 2), g.getBorderWidth()), Color.GRAY);
+        left = new Block(new Rectangle(new Point(0, g.getHorizontalBorderWidth()),
+                g.getVerticalBorderWidth(), g.getHeight() - g.getHorizontalBorderWidth()), Color.GRAY);
+        top = new Block(new Rectangle(new Point(0, 0), g.getWidth(), g.getHorizontalBorderWidth()), Color.GRAY);
+        right = new Block(new Rectangle(new Point(g.getWidth() - g.getVerticalBorderWidth(),
+                g.getHorizontalBorderWidth()),
+                g.getVerticalBorderWidth(), g.getHeight() - g.getHorizontalBorderWidth()), Color.GRAY);
+        bottom = new Block(new Rectangle(new Point(g.getVerticalBorderWidth(),
+                g.getHeight() - g.getHorizontalBorderWidth()),
+                g.getWidth() - (g.getVerticalBorderWidth() * 2), g.getHorizontalBorderWidth()), Color.GRAY);
     }
-    public Borders(int borderWidth, int environmentWidth, int environmentHeight) {
-        left = new Block(new Rectangle(new Point(0, borderWidth),
-                borderWidth, environmentHeight - borderWidth), Color.GRAY);
-        top = new Block(new Rectangle(new Point(0, 0), environmentHeight, borderWidth), Color.GRAY);
-        right = new Block(new Rectangle(new Point(environmentHeight - borderWidth, borderWidth),
-                borderWidth, environmentHeight - borderWidth), Color.GRAY);
-        bottom = new Block(new Rectangle(new Point(borderWidth, environmentHeight - borderWidth),
-                environmentHeight - (borderWidth * 2), borderWidth), Color.GRAY);
+    /**
+     * Constructor for the Borders class, using individual border and environment dimensions.
+     * @param horizontalBorderWidth the width of the horizontal borders
+     * @param verticalBorderWidth the width of the vertical borders
+     * @param environmentWidth the width of the game environment
+     * @param environmentHeight the height of the game environment
+     */
+    public Borders(int horizontalBorderWidth, int verticalBorderWidth, int environmentWidth, int environmentHeight) {
+        left = new Block(new Rectangle(new Point(0, horizontalBorderWidth),
+                verticalBorderWidth, environmentHeight - horizontalBorderWidth), Color.GRAY);
+        top = new Block(new Rectangle(new Point(0, 0), environmentWidth, horizontalBorderWidth), Color.GRAY);
+        right = new Block(new Rectangle(new Point(environmentWidth - verticalBorderWidth, horizontalBorderWidth),
+                verticalBorderWidth, environmentHeight - horizontalBorderWidth), Color.GRAY);
+        bottom = new Block(new Rectangle(new Point(verticalBorderWidth, environmentHeight - horizontalBorderWidth),
+                environmentWidth - (verticalBorderWidth * 2), horizontalBorderWidth), Color.GRAY);
     }
 
 
@@ -63,6 +75,14 @@ public class Borders {
         this.bottom = bottom;
     }
     //Queries
+    /**
+     * Returns a string representation of the borders.
+     * @return a string representation of the borders
+     */
+    public String toString() {
+        return "Left Border: " + left.toString() + ".     Top Border: " + top.toString()
+                + ".     Right Border: " + right.toString() + ".     Bottom Border: " + bottom.toString();
+    }
     /**
      * Returns the left border value.
      * @return the left border value
@@ -101,13 +121,5 @@ public class Borders {
                 + left.getRectangle().getRightSide().start().getX()),
                 Geometry.RAND.nextDouble(bottom.getRectangle().getTopSide().start().getY()
                         + top.getRectangle().getBottomSide().start().getY()));
-    }
-    /**
-     * Returns a string representation of the borders.
-     * @return a string representation of the borders
-     */
-    public String toString() {
-        return "Left Border: " + left.toString() + ".     Top Border: " + top.toString()
-                + ".     Right Border: " + right.toString() + ".     Bottom Border: " + bottom.toString();
     }
 }
